@@ -1,6 +1,8 @@
 #include "lexicon.hpp"
-#include <iostream>
 #include <fstream>
+#include <queue>
+#include <string>
+#include <vector>
 
 Node::Node() {
     isWord = false;
@@ -15,6 +17,11 @@ Node::~Node() {
 
 void Lexicon::add(const std::string& word) {
  ensureNodeExists(word)->isWord = true;
+ length++;
+}
+
+unsigned int Lexicon::size(){
+    return length;
 }
 
 bool Lexicon::containsPrefix(const std::string& prefix) const {
@@ -58,7 +65,7 @@ void Node::display() {
             std::cout << ", ";
         std::cout << it2->first;
         if(isWord) std::cout<<"&";
-        std::cout<<":" << it2->second;
+        //std::cout<<":" << it2->second;
     }
     std::cout <<"| ";
     }
@@ -66,23 +73,86 @@ void Node::display() {
 
 void Lexicon::display() const{
     std::cout << std::endl << "Start printing the Lexicon : " << std::endl;
-
     for (std::unordered_map <char, Node*>::iterator it = root->suffixes.begin(); it != root->suffixes.end(); ++it){
-    std::cout << it->first << " : ";
+    std::cout << it->first << " : "<<std::endl<<"   ";
     it->second->display();
     std::cout << std::endl;
     }
 }
 
-void Lexicon::loadFromFile(){
+std::vector<std::string> Lexicon::loadFromFile(){
+    std::vector<std::string> array;
 	std::string line;
 	std::ifstream myfile ("./data/dico.txt");
 	if (myfile.is_open()){
 		while (! myfile.eof() )
 		{
 			getline (myfile,line);
-			add(line);
+			array.push_back(line);
 		}
 		myfile.close();
 	} else std::cout << "Unable to open file"<<std::endl;
+    return array;
 }
+
+void Lexicon::addPlus(std::string word, std::vector<std::string>& array){
+    for(unsigned int i=0; i < word.size(); i++){
+        std::pair<std::string, std::string> p = splitString(word, i);
+        //std::cout<<"p.first : "<<p.first<<" p.second "<< p.second<<std::endl;
+        array.push_back(reverseStr(p.first)+ "+" + p.second);
+    }
+}
+
+void Lexicon::downloadLexicon(){
+    std::vector<std::string> lexicon;
+    std::vector<std::string> array = loadFromFile();
+    for(std::string word: array){
+        addPlus(word, lexicon);
+        for(std::string curr: lexicon){
+            add(word);
+        }
+        lexicon.clear();
+    }
+}
+
+/**
+void display(){
+    
+    // Mark all the vertices as not visited 
+    bool *visited = new bool[V]; 
+    for(int i = 0; i < V; i++) 
+        visited[i] = false; 
+  
+    // Create a queue for BFS 
+    list<int> queue; 
+  
+    // Mark the current node as visited and enqueue it 
+    visited[s] = true; 
+    queue.push_back(s); 
+  
+    // 'i' will be used to get all adjacent 
+    // vertices of a vertex 
+    list<int>::iterator i; 
+  
+    while(!queue.empty()) 
+    { 
+        // Dequeue a vertex from queue and print it 
+        s = queue.front(); 
+        cout << s << " "; 
+        queue.pop_front(); 
+  
+        // Get all adjacent vertices of the dequeued 
+        // vertex s. If a adjacent has not been visited,  
+        // then mark it visited and enqueue it 
+        for (i = adj[s].begin(); i != adj[s].end(); ++i) 
+        { 
+            if (!visited[*i]) 
+            { 
+                visited[*i] = true; 
+                queue.push_back(*i); 
+            } 
+        } 
+    } 
+}
+
+**/

@@ -36,6 +36,8 @@ common_files = {
   "src/board.hpp", "src/board.cpp",
   "src/spot.hpp", "src/spot.cpp",
   "src/bonus.hpp", "src/bonus.cpp",
+  "src/lexicon.hpp", "src/lexicon.cpp",
+  "src/include.hpp", "src/include.cpp",
 }
 
 -- Pour chaque exécutable que vous souhaitez générer, ajoutez un nouveau projet
@@ -43,9 +45,11 @@ common_files = {
 -- ne sont pas dans la liste common_files, en particulier celui contenant le
 -- main.
 
-project "test_board"
+project "test_gaddag"
   language "c++"
   kind "ConsoleApp"
   targetdir "bin"
   files ( common_files )
-  files {"src/test_board.cpp"}
+  files {
+    "src/test_gaddag.cpp",
+  }

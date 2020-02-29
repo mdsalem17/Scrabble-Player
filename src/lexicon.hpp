@@ -1,6 +1,8 @@
 #pragma once
+#include "include.hpp"
 #include <unordered_map>
 #include <string>
+#include <vector>
 
 struct Node {
     bool isWord;
@@ -21,13 +23,18 @@ public:
     }
 
     void add(const std::string& word);
+    unsigned int size();
     bool contains(const std::string& word) const;
     bool containsPrefix(const std::string& prefix) const;
     void display() const;
-    void loadFromFile();
+    std::vector<std::string> loadFromFile();
+    void addPlus(std::string word, std::vector<std::string>& array);
+    void downloadLexicon();
+
 
 private:
-    Node *root;
+    unsigned int length = 0;
+    Node *root;   
     const Node *findNode(const std::string& str) const;
     Node *ensureNodeExists(const std::string& str);
 };
