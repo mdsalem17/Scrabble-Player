@@ -109,7 +109,7 @@ associés.
 Le Gaddag simplifié est une structure de données pour encoder le dictionnaire,
 et déterminer rapidement si des mots sont dedans ou non. Nous simplifions ici
 cette structure de données pour faciliter son implémentation, en retirant la
-minimisation du nombre de nœuds. Votre Gaddag sera dont plus simplement un
+minimisation du nombre de nœuds. Votre Gaddag sera donc plus simplement un
 arbre.
 
 ### Arbre dictionnaire
@@ -129,7 +129,7 @@ vérifier :
 * le mot est dans le dictionnaire si et seulement si le nœud sur lequel le
   parcours a abouti est terminal.
 
-Par exemple, sur l'arbre suivant, sur lequel les nœuds terminaux xont colorés en
+Par exemple, sur l'arbre suivant, sur lequel les nœuds terminaux sont colorés en
 noir :
 
 ![exemple arbre](data/exemple_arbre.png)
@@ -213,7 +213,103 @@ soit ajouté.
 
 ## Exploitation du Gaddag
 
-Explications à venir
+### Les cases par lesquelles passent les mots
+
+Lorsqu'un nouveau mot est joué au scrabble, il doit nécessairement réutiliser
+au moins une lettre déjà présente sur le plateau. Le plus simple consiste à
+croier un mot existant comme dans l'exemple précédent :
+
+```
+        B
+        L
+        A
+    B A T E A U
+        T
+        E
+```
+
+Ici le mot `BATEAU` est ajouté en réutilisant l'un des T du mot `BLATTE` déjà
+présent sur le plateau. Il est également possible de rallonger les mots
+existants :
+
+```
+        B
+        L
+        A
+    B A T E A U X
+        T
+        E
+```
+
+Ici la lettre `X` a été ajoutée pour étendre le mot `BATEAU` en `BATEAUX`. Il
+est enfin possible de rajouter créer un mot adjacent et parallèle à un mot
+existant, en s'assurant que tous les mots créés sont valides :
+
+```
+        B
+        L
+        A   C L E S
+    B A T E A U X
+        T
+        E
+```
+
+Ici, nous avons joué `CLES` tout en prenant garde  à ce que les mots `CA`, `LU`
+et `EX` existent.
+
+Au bilan, dans la mesure où il faut nécessairement réutiliser une lettre
+présente, et que pour l'utiliser, il faut placer une nouvelle lettre à côté, on
+peut en déduire que **tout nouveau mot passera par une case vide à côté d'une
+case occupée**. Lorsque vous cherchez à lister les mots pouvant être ajoutés,
+vous pouvez initialiser vos recherches sur ces cases, en essayant
+horizontalement et verticalement. Par la suite, vous vous poserez la question
+d'accélérer la recherche en choisissant plus judicieusement les cases de départ.
+
+## Lister les coups compatibles
+
+La recherche d'un mot consiste à partir d'une case comme expliqué juste au
+dessus, et à choisir une direction, verticale ou horizontale. Ensuite, faites
+avancer simultanément deux curseurs, un sur la *case courante* sur le plateau,
+et un sur le *nœud courant* dans le Gaddag, initialement sur la racine. Lorsque
+le curseur du plateau est sur une case vide, **à la manière d'un parcours en
+profondeur**, pour chaque arête dans le Gaddag partant du nœud courant, vous
+pouvez ajouter la lettre correspondant à l'arête sur la case du plateau. Lorsque
+la case est occupée, vous n'avez pas le choix, il faut utiliser la lettre
+présente sur la case. Pour mettre à jour les curseurs :
+
+* le curseur dans le Gaddag avance en suivant l'arête choisie ou forcée
+* le curseur sur le plateau avance sur la prochaine case à tester :
+  - si nous n'avons pas utilisé de `+` dans le Gaddag, vers l'arrière
+  - si nous avons déjà utilisé le `+` dans le Gaddag, vers l'avant
+  - si nous utilisons le `+` dans le Gaddag, sur la case voisins de la case de
+    départ vers l'avant
+
+Si vous cherchez un mot horizontal, l'avant est à droite, et l'arrière à gauche.
+Verticalement, l'avant est vers le bas, et l'arrière vers le haut.
+
+Au fur et à mesure du parcours, à chaque lettre que vous tentez d'ajouter, il
+faut également faire attention à vérifier qu'elle ne contribue pas à deux mots à
+la fois verticalement et horizontalement. Si c'est le cas, il faut également
+tester l'existence du mot perpendiculaire créé. Dans l'exemple précédent, au
+moment où le mot `CLES` a été joué horizontalement, il a fallu détecter que la
+lettre `C` créait également le mot `CA` verticalement et que ce mot existait.
+
+Lorsque le curseur du plateau est sur une case vide, et que le curseur du Gaddag
+est sur un nœud terminal, vous avez trouvé un mot valide.
+
+## Trouver le meilleur coup
+
+Pour trouver le meilleur coup, il faut calculer le score correspondant à chaque
+mot possible en respectant les règles du Scrabble :
+
+* pour chaque mot créé ou modifié par le coup
+  - pour chaque lettre du mot
+    * si la lettre est nouvelle, ajouter sa valeur, éventuellement modifiée par
+      le bonus de lettre en dessous
+    * sinon ne comptabiliser que la valeur de la lettre, sans le bonus en
+      dessous
+  - pour chaque bonus de mot sous une nouvelle lettre, multiplier la valeur du
+    mot par le bonus.
 
 ## Jeu de test
 
