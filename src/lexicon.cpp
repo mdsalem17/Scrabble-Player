@@ -1,12 +1,14 @@
-#include "lexicon.hpp"
 #include <fstream>
 #include <queue>
 #include <string>
 #include <vector>
 
+#include "lexicon.hpp"
+
 Node::Node() {
     isWord = false;
 }
+
 Node::~Node() {
     for(std::unordered_map<char, Node*>::iterator itr = suffixes.begin();
                                     itr != suffixes.end(); itr++){
@@ -16,8 +18,8 @@ Node::~Node() {
 }
 
 void Lexicon::add(const std::string& word) {
- ensureNodeExists(word)->isWord = true;
- length++;
+    ensureNodeExists(word)->isWord = true;
+    length++;
 }
 
 unsigned int Lexicon::size(){
@@ -25,12 +27,12 @@ unsigned int Lexicon::size(){
 }
 
 bool Lexicon::containsPrefix(const std::string& prefix) const {
-return findNode(prefix) != nullptr;
+    return findNode(prefix) != nullptr;
 }
 
 bool Lexicon::contains(const std::string& word) const {
- const Node *found = findNode(word);
- return found != nullptr && found->isWord;
+    const Node *found = findNode(word);
+    return found != nullptr && found->isWord;
 }
 
 const Node *Lexicon::findNode(const std::string& str) const {

@@ -5,8 +5,8 @@ class Tile {
         char letter;
         unsigned int point;
     public:
-        Tile(){};
-        Tile(char _c, int _point);
+        Tile();
+        Tile(char _c, unsigned int _point);
         unsigned int getPoint() const;
         char getLetter() const;
         ~Tile();

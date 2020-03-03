@@ -1,7 +1,10 @@
-#include "lexicon.hpp"
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "lexicon.hpp"
+#include "bag.hpp"
+#include "player.hpp"
 
 int main() {
   Lexicon l2;
@@ -46,5 +49,17 @@ int main() {
     else std::cout<<word<<" not found"<<std::endl;
   }
 **/
+
+
+  //Bag bag;
+  //bag.display();
+
+  Player player;
+  std::cout << "current tiles "; player.displayCurrentTiles();
+  std::cout << "remaining tiles " << player.getTotalTilesNb() << std::endl;
+  
+  player.removeTile('A');
+  std::cout << "current tiles "; player.displayCurrentTiles();
+
   return 0 ;
 }
