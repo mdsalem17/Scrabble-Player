@@ -6,7 +6,12 @@
 const int ALPHA = 26;
 
 Bag::Bag() {
+    nbTiles = 0;
     initialize();
+    for(unsigned int i = 0; i < tiles.size(); i++){
+        nbTiles += tiles.at(i).getNumber();
+    }
+    std::cout << "game starting with " << nbTiles << " tiles" << std::endl;
 }
 
 void Bag::initialize(){
@@ -58,7 +63,7 @@ Tile Bag::getTile(char letter) const{
     int indice = letter - 'A';
 
     if(indice >= 0 && indice < ALPHA)
-        return tiles.at(letter);
+        return tiles.at(indice);
     else
         return tiles.at(0);
 }
@@ -67,11 +72,16 @@ bool Bag::decrementTile(char letter){
     int indice = letter - 'A';
     if(tiles.at(indice).getNumber() > 0){
         tiles.at(indice).decrementNumber();
+        nbTiles--;
         return true;
     }
     else{
         return false;
     }
+}
+
+unsigned int Bag::getNbTiles() const{
+    return nbTiles;
 }
 
 void Bag::display() const{

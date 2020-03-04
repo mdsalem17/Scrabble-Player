@@ -10,8 +10,8 @@ class Player{
         Player();
         ~Player();
         void displayCurrentTiles();
-        unsigned int getTotalTilesNb();
-        void removeTile(char letter);
+        void replaceTile(char letter);
+        char getPlayerTile(unsigned int position) const;
 
     private:
         std::vector<char> currentTiles;

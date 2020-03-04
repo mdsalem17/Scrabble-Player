@@ -6,36 +6,43 @@ const int ALPHA = 26;
 
 Player::Player(){
     //add 7 tiles in vector currentTiles
-    currentTiles.push_back('A');
-    bag.decrementTile('A');
-    currentTiles.push_back('B');
-    bag.decrementTile('B');
-    currentTiles.push_back('C');
-    bag.decrementTile('C');
-    currentTiles.push_back('A');
-    bag.decrementTile('A');
+    for(unsigned int i = 0; i < 7; i++){
+        addTile();
+    }
 }
 
 void Player::displayCurrentTiles(){
     for(unsigned int i = 0; i < currentTiles.size(); i++){
-        std::cout << currentTiles.at(i) << ", ";
+        if(i == currentTiles.size()-1)
+            std::cout << currentTiles.at(i);
+        else
+            std::cout << currentTiles.at(i) << ", ";
     }
     std::cout << "\n";
 }
 
-unsigned int Player::getTotalTilesNb(){
-    unsigned int totalTiles = 0;
-    for(unsigned int i = 0; i < ALPHA; i++){
-        totalTiles += bag.getTile(i).getNumber();
-    }
-    return totalTiles;
+char Player::getPlayerTile(unsigned int position) const{
+    return currentTiles.at(position);
 }
 
 bool Player::addTile(){
-    //complete function
+    if(bag.getNbTiles() > 0){
+        unsigned int rand;
+        char letter;
+        do{
+            rand = (std::rand() % ALPHA) + 'A';
+            letter = rand;
+            std::cout << "degub msg: random generated " << rand << " in char : " << letter << std::endl;
+        }while(bag.getTile(letter).getNumber() == 0);
+
+        currentTiles.push_back(letter);
+        bag.decrementTile(letter);
+        return true;
+    }
+    return false; //no tiles left.
 }
 
-void Player::removeTile(char letter){
+void Player::replaceTile(char letter){
 
     //remove the tile (first occurence)
     std::vector<char>::iterator index = std::find(currentTiles.begin(), currentTiles.end(), letter);

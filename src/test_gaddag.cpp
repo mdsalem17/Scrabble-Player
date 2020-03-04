@@ -1,6 +1,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <time.h>
 
 #include "lexicon.hpp"
 #include "bag.hpp"
@@ -16,8 +17,9 @@ int main() {
     if(l2.contains(word)) std::cout<<word<<" found"<<std::endl;
     else std::cout<<word<<" not found"<<std::endl;
   }
-  Lexicon l;
   /**
+  Lexicon l;
+
   std::pair<std::string, std::string> p = splitString("LaFrogue", 3);
   std::cout<<std::endl<<"spliting into two words"<<std::endl;
   std::cout<<p.first<<std::endl;
@@ -50,15 +52,22 @@ int main() {
   }
 **/
 
+  /** test bag
+   * Bag bag;
+   * bag.display();
+   */
 
-  //Bag bag;
-  //bag.display();
+  /** test player
+   * srand(time(NULL));
+   * Player player;
+   * std::cout << "current tiles "; player.displayCurrentTiles();
+   * 
+   * player.replaceTile(player.getPlayerTile(2));
+   * std::cout << "current tiles "; player.displayCurrentTiles();
+   */
 
+  srand(time(NULL));
   Player player;
-  std::cout << "current tiles "; player.displayCurrentTiles();
-  std::cout << "remaining tiles " << player.getTotalTilesNb() << std::endl;
-  
-  player.removeTile('A');
   std::cout << "current tiles "; player.displayCurrentTiles();
 
   return 0 ;
