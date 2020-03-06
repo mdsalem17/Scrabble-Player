@@ -30,5 +30,4 @@ void printArray(std::vector<std::string> input){
 	for (unsigned int i = 0; i < input.size(); i++) {
 		std::cout << input.at(i) <<" "<<std::endl;
 	}
-    std::cout<<std::endl;
 }

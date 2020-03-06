@@ -12,6 +12,8 @@ int main() {
   l2.downloadLexicon();
   std::cout<<"the size of the lexicon is "<<l2.size()<<std::endl;
 
+  //l2.display();
+
   std::vector<std::string> array2 = {"ABAISSA", "ABAISSEUR", "ABORNERAIENT", "VAMPERIONS", "ART", "AMI", "URBANITE", "RAPETISSAIS", "ET", "RANGERONS", "LNKBJK HIEGB", "GERHAJ", "HERHAERHAE"};
   for(std::string word : array2) {
     if(l2.contains(word)) std::cout<<word<<" found"<<std::endl;

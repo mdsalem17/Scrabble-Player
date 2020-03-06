@@ -76,9 +76,9 @@ void Node::display() {
 void Lexicon::display() const{
     std::cout << std::endl << "Start printing the Lexicon : " << std::endl;
     for (std::unordered_map <char, Node*>::iterator it = root->suffixes.begin(); it != root->suffixes.end(); ++it){
-    std::cout << it->first << " : "<<std::endl<<"   ";
-    it->second->display();
-    std::cout << std::endl;
+        std::cout << it->first << " : "<<std::endl<<"   ";
+        it->second->display();
+        std::cout << std::endl;
     }
 }
 
@@ -87,9 +87,7 @@ std::vector<std::string> Lexicon::loadFromFile(){
 	std::string line;
 	std::ifstream myfile ("./data/dico.txt");
 	if (myfile.is_open()){
-		while (! myfile.eof() )
-		{
-			getline (myfile,line);
+		while (getline (myfile,line)){
 			array.push_back(line);
 		}
 		myfile.close();
@@ -113,6 +111,7 @@ void Lexicon::downloadLexicon(){
         for(std::string curr: lexicon){
             add(word);
         }
+        //add(word); 
         lexicon.clear();
     }
 }
