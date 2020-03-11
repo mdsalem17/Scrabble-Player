@@ -38,7 +38,6 @@ common_files = {
   "src/bonus.hpp", "src/bonus.cpp",
   "src/lexicon.hpp", "src/lexicon.cpp",
   "src/include.hpp", "src/include.cpp",
-  "src/tile.hpp", "src/tile.cpp",
   "src/bag.hpp", "src/bag.cpp",
   "src/player.hpp", "src/player.cpp",
 }

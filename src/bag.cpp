@@ -1,95 +1,86 @@
-#include <vector>
+#include <iostream>
 
 #include "bag.hpp"
-#include "tile.hpp"
 
 const int ALPHA = 26;
+const int TILES = 102;
 
 Bag::Bag() {
-    nbTiles = 0;
+    tabLetters = new char[TILES];
+    nbLetters = TILES;
     initialize();
-    for(unsigned int i = 0; i < tiles.size(); i++){
-        nbTiles += tiles.at(i).getNumber();
+    std::cout << "game starting with " << nbLetters << " tiles" << std::endl;
+}
+
+//fonction qui renvoie les points de la lettre passee par parametre
+unsigned int Bag::getCharPoints(char _letter) const{
+    unsigned int points = 0;
+    switch (_letter){
+        case 'A': points = 1; break;
+        case 'B': points = 3; break;
+        case 'C': points = 3; break;
+        case 'D': points = 2; break;
+        case 'E': points = 1; break;
+        case 'F': points = 4; break;
+        case 'G': points = 2; break;
+        case 'H': points = 4; break;
+        case 'I': points = 1; break;
+        case 'J': points = 8; break;
+        case 'K': points = 10; break;
+        case 'L': points = 1; break;
+        case 'M': points = 2; break;
+        case 'N': points = 1; break;
+        case 'O': points = 1; break;
+        case 'P': points = 3; break;
+        case 'Q': points = 2; break;
+        case 'R': points = 1; break;
+        case 'S': points = 1; break;
+        case 'T': points = 1; break;
+        case 'U': points = 1; break;
+        case 'V': points = 4; break;
+        case 'W': points = 10; break;
+        case 'X': points = 10; break;
+        case 'Y': points = 10; break;
+        case 'Z': points = 10; break;
     }
-    std::cout << "game starting with " << nbTiles << " tiles" << std::endl;
+    return points;
 }
 
 void Bag::initialize(){
-    Tile tmp;
-    char character = 'A';
-    for(int i=0;i<ALPHA;i++){
-        switch (i){
-            case 0: tmp = Tile(character+i, 9); break;
-            case 1: tmp = Tile(character+i, 2); break;
-            case 2: tmp = Tile(character+i, 2); break;
-            case 3: tmp = Tile(character+i, 3); break;
-            case 4: tmp = Tile(character+i, 15); break;
-            case 5: tmp = Tile(character+i, 2); break;
-            case 6: tmp = Tile(character+i, 2); break;
-            case 7: tmp = Tile(character+i, 2); break;
-            case 8: tmp = Tile(character+i, 8); break;
-            case 9: tmp = Tile(character+i, 1); break;
-            case 10: tmp = Tile(character+i, 1); break;
-            case 11: tmp = Tile(character+i, 5); break;
-            case 12: tmp = Tile(character+i, 3); break;
-            case 13: tmp = Tile(character+i, 6); break;
-            case 14: tmp = Tile(character+i, 6); break;
-            case 15: tmp = Tile(character+i, 2); break;
-            case 16: tmp = Tile(character+i, 3); break;
-            case 17: tmp = Tile(character+i, 6); break;
-            case 18: tmp = Tile(character+i, 6); break;
-            case 19: tmp = Tile(character+i, 6); break;
-            case 20: tmp = Tile(character+i, 6); break;
-            case 21: tmp = Tile(character+i, 2); break;
-            case 22: tmp = Tile(character+i, 1); break;
-            case 23: tmp = Tile(character+i, 1); break;
-            case 24: tmp = Tile(character+i, 1); break;
-            case 25: tmp = Tile(character+i, 1); break;
+
+    unsigned int tabNbLetters[] = {9, 2, 2, 3, 15, 2, 2, 2, 8, 1, 1, 5, 3, 6, 6, 2, 3, 6, 6, 6, 6, 2, 1, 1, 1, 1};
+    unsigned int start = 0;
+    unsigned int end = 0;
+
+    for(unsigned int i =0; i< ALPHA; i++){
+        end += tabNbLetters[i];
+        for(unsigned int j = start; j < end; j++){
+            tabLetters[j] = 'A'+i;
         }
-        tiles.push_back(tmp);
+        start = end;
     }
 }
 
-Tile Bag::getTile(unsigned int index) const{
-
-    if(index >= 0 && index < ALPHA)
-        return tiles.at(index);
-    else
-        return tiles.at(0);
-}
-
-Tile Bag::getTile(char letter) const{
-
-    int indice = letter - 'A';
-
-    if(indice >= 0 && indice < ALPHA)
-        return tiles.at(indice);
-    else
-        return tiles.at(0);
-}
-
-bool Bag::decrementTile(char letter){
-    int indice = letter - 'A';
-    if(tiles.at(indice).getNumber() > 0){
-        tiles.at(indice).decrementNumber();
-        nbTiles--;
-        return true;
+void Bag::displayBag(){
+    std::cout << " [ ";
+    for(unsigned int i = 0; i < TILES; i++){
+        std::cout << tabLetters[i] << ", "; 
     }
-    else{
-        return false;
-    }
+    std::cout << "] \n";
 }
 
-unsigned int Bag::getNbTiles() const{
-    return nbTiles;
+char Bag::generateLetter(){
+    int random = rand() % nbLetters;
+    char result = tabLetters[random];
+    tabLetters[random] = tabLetters[nbLetters-1];
+    nbLetters--;
+    return result;
 }
 
-void Bag::display() const{
-    for(int i = 0; i < ALPHA; i++){
-        std::cout << tiles.at(i).getLetter() << " : il reste " << tiles.at(i).getNumber() << " tiles, points : " << tiles.at(i).getPoints(tiles.at(i).getLetter()) << std::endl; 
-    }
+unsigned int Bag::getNbLetters() const{
+    return nbLetters;
 }
 
 Bag::~Bag() { 
-    tiles.clear();
+    delete []tabLetters;
 }

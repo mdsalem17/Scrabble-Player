@@ -12,8 +12,6 @@ int main() {
   l2.downloadLexicon();
   std::cout<<"the size of the lexicon is "<<l2.size()<<std::endl;
 
-  //l2.display();
-
   std::vector<std::string> array2 = {"ABAISSA", "ABAISSEUR", "ABORNERAIENT", "VAMPERIONS", "ART", "AMI", "URBANITE", "RAPETISSAIS", "ET", "RANGERONS", "LNKBJK HIEGB", "GERHAJ", "HERHAERHAE"};
   for(std::string word : array2) {
     if(l2.contains(word)) std::cout<<word<<" found"<<std::endl;
@@ -54,22 +52,15 @@ int main() {
   }
 **/
 
-  /** test bag
-   * Bag bag;
-   * bag.display();
-   */
-
-  /** test player
-   * srand(time(NULL));
-   * Player player;
-   * std::cout << "current tiles "; player.displayCurrentTiles();
-   * 
-   * player.replaceTile(player.getPlayerTile(2));
-   * std::cout << "current tiles "; player.displayCurrentTiles();
-   */
-
   srand(time(NULL));
   Player player;
+  //player.bag.displayBag();
+  std::cout << "current tiles "; player.displayCurrentTiles();
+
+  player.replaceTile(0);
+  std::cout << "current tiles "; player.displayCurrentTiles();
+
+  player.replaceTile(1);
   std::cout << "current tiles "; player.displayCurrentTiles();
 
   return 0 ;

@@ -1,23 +1,19 @@
 #pragma once
 
-#include <vector>
-
-#include "include.hpp"
-#include "tile.hpp"
-
 class Bag {
     public:
         Bag();
         ~Bag();
 
-        void display() const;
-        void initialize();
-        unsigned int getNbTiles() const;
-        Tile getTile(unsigned int index) const;
-        Tile getTile(char letter) const;
-        bool decrementTile(char letter);
+        char generateLetter();
+        void displayBag();
+        unsigned int getCharPoints(char _letter) const;
+        unsigned int getNbLetters() const;
 
     private:
-        std::vector<Tile> tiles;
-        unsigned int nbTiles;
+        char *tabLetters;
+        unsigned int nbLetters;
+        char tabNombreLetters;
+
+        void initialize();
 };

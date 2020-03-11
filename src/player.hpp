@@ -1,21 +1,20 @@
 #pragma once
 
-#include <vector>
-
 #include "bag.hpp"
 
 class Player{
 
     public:
+        Bag bag;
+
         Player();
         ~Player();
+        unsigned int getCurrentNbTiles();
         void displayCurrentTiles();
-        void replaceTile(char letter);
-        char getPlayerTile(unsigned int position) const;
+        void replaceTile(int pos);
 
     private:
-        std::vector<char> currentTiles;
-        Bag bag;
-        bool addTile(); //returns false if there are no more tiles in bag
+        unsigned int nbCurrentTiles;
+        char *currentTiles;
 
 };
