@@ -22,10 +22,6 @@ void Lexicon::add(const std::string& word) {
     length++;
 }
 
-unsigned int Lexicon::size(){
-    return length;
-}
-
 bool Lexicon::containsPrefix(const std::string& prefix) const {
     return findNode(prefix) != nullptr;
 }
@@ -115,6 +111,26 @@ void Lexicon::downloadLexicon(){
         lexicon.clear();
     }
 }
+
+
+/******************************************************/
+
+void Node::size(unsigned int& curr) {
+    if(isWord == true) curr++;
+    for (std::unordered_map <char, Node*>::iterator it = suffixes.begin(); it != suffixes.end(); ++it){
+        it->second->size(curr);
+    }
+}
+
+unsigned int Lexicon::size() const{
+    unsigned int curr =0;
+    std::cout << std::endl << "Start counting the Lexicon : " << std::endl;
+    root->size(curr);
+    std::cout << "the gaddag size is " << curr << std::endl;
+    return curr;
+}
+
+/********************************************/
 
 /**
 void display(){
