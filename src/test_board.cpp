@@ -4,12 +4,10 @@
 #include <sstream>
 
 int main() {
-  Board b ;
 
-  std::cout << b << std::endl ;
-
-  std::stringstream ss ;
-  ss << "..............." << std::endl ;
+  //std::cout << b << std::endl ;
+  
+  /*ss << "..............." << std::endl ;
   ss << "..............." << std::endl ;
   ss << "..............." << std::endl ;
   ss << "..............." << std::endl ;
@@ -23,8 +21,15 @@ int main() {
   ss << ".......U......." << std::endl ;
   ss << ".....SCRABBLE.." << std::endl ;
   ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
+  ss << "..............." << std::endl ;*/
 
+  Board b;
+  std::stringstream ss ;
+
+  b.placeWord(ss, 1, 0, 0, "test");
+  b.load(ss) ;
+
+  b.placeWord(ss, 0, 1, 2, "function");
   b.load(ss) ;
 
   std::cout << b << std::endl ;

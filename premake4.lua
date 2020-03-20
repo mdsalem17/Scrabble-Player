@@ -47,11 +47,11 @@ common_files = {
 -- ne sont pas dans la liste common_files, en particulier celui contenant le
 -- main.
 
-project "test_gaddag"
+project "test_board"
   language "c++"
   kind "ConsoleApp"
   targetdir "bin"
   files ( common_files )
   files {
-    "src/test_gaddag.cpp",
+    "src/test_board.cpp",
   }

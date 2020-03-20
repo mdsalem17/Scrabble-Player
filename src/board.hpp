@@ -3,9 +3,26 @@
 #include "spot.hpp"
 
 #include <iostream>
+#include <vector>
+
+
+struct Box {
+
+  public:
+    Box();
+    Box(unsigned int _i, unsigned int _j);
+    char getBoxLetter();
+    void setBoxLetter(char _letter);
+
+  private:
+    unsigned int i;
+    unsigned int j;
+    char letter;
+
+};
+
 
 /* Scrabble board */
-
 struct Board {
   //default initialization of a scrabble board
   Board() ;
@@ -18,8 +35,20 @@ struct Board {
   Spot operator()(unsigned char l, unsigned char c) const ;
   Spot& operator()(unsigned char l, unsigned char c) ;
 
-  //spots are public, and can therefore also be accessed b index
+  /**
+   * ss => stringstream used to print the board later
+   * orientation => 1 is vertical, 0 is horizontal
+   * init_i, init_j => statring box 
+   * word => string containting the word to be placed on the board
+   * */
+  void placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string word);
+
+  //spots are public, and can therefore also be accessed by index
   Spot spots[225] ;
+
+  //boxes containt all the board letters by indexes (also used to place letters on the board)
+  Box boxes[15][15];
+
 } ;
 
 //board display on the console
