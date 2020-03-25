@@ -55,3 +55,12 @@ project "test_board"
   files {
     "src/test_board.cpp",
   }
+
+  project "test_gaddag"
+  language "c++"
+  kind "ConsoleApp"
+  targetdir "bin"
+  files ( common_files )
+  files {
+    "src/test_gaddag.cpp",
+  }

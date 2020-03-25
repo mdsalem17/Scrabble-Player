@@ -21,6 +21,7 @@ class Lexicon {
         
         Lexicon() {
             root = nullptr;
+            length = 0;
         }
 
         ~Lexicon() { 
@@ -35,8 +36,10 @@ class Lexicon {
         std::vector<std::string> loadFromFile();
         void addPlus(std::string word, std::vector<std::string>& array);
         void downloadLexicon();
-    private:
+
         Node *root;   
+
+    private:
         const Node *findNode(const std::string& str) const;
         Node *ensureNodeExists(const std::string& str);
 };
