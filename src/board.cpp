@@ -1,4 +1,5 @@
 #include "board.hpp"
+
 #include <fstream>
 #include <sstream>
 

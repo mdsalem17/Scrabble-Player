@@ -1,15 +1,15 @@
 #pragma once
 
 #include "include.hpp"
-//#include "board.hpp"
-//#include "player.hpp"
+#include "board.hpp"
+#include "player.hpp"
 #include "lexicon.hpp"
 
 class Game{
 
     public:
-        //Board board;
-        //Player player;
+        Board board;
+        Player player;
         Lexicon lexicon;
 
         Game();

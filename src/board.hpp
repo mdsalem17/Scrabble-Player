@@ -1,7 +1,6 @@
 #pragma once
 
 #include "spot.hpp"
-#include "board.hpp"
 #include "box.hpp"
 
 #include <iostream>

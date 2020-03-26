@@ -40,6 +40,8 @@ common_files = {
   "src/bag.hpp", "src/bag.cpp",
   "src/player.hpp", "src/player.cpp",
   "src/game.hpp", "src/game.cpp",
+  "src/box.hpp", "src/box.cpp",
+  "src/board.hpp", "src/board.cpp",
 }
 
 -- Pour chaque exécutable que vous souhaitez générer, ajoutez un nouveau projet
