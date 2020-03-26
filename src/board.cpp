@@ -1,29 +1,9 @@
 #include "board.hpp"
-
 #include <fstream>
 #include <sstream>
 
 /* Strcuture Box **************************************************/
 
-Box::Box(){
-  i = 0;
-  j = 0;
-  letter = '.';
-}
-
-Box::Box(unsigned int _i, unsigned int _j){
-  i = _i;
-  j = _j;
-  letter = '.';
-}
-
-char Box::getBoxLetter(){
-  return letter;
-}
-
-void Box::setBoxLetter(char _letter){
-    letter = _letter;
-}
 
 /******************************************************************/
 

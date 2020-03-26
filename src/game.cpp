@@ -1,98 +1,106 @@
 #include "game.hpp"
-
+#include "include.hpp"
+//#include "box.hpp"
+/**
+struct Coups{ 
+  Box case;
+  std::string mot;
+  bool direction;
+}
+**/
 Game::Game(){
     lexicon.downloadLexicon();
     std::cout << "lexicon downloaded" << std::endl;
 }
 
-void Game::remove(char c, std::string& word){
-  std::string m = "";
-  bool first = false;
-  for(unsigned int i=0; i<word.size(); i++){
-    if(first) m+= word[i];
-    else if(word[i] == c) first = true;
-    else m += word[i];
-  }
-  word = m;
-}
-
-void Game::rechercheMot(Node* root, std::string hand, std::string mot, std::vector<std::string>& tab){
-  for(unsigned int i =0; i<hand.size(); i++){
-    Node* curr = root;
-    char pcurr = hand[i];
+/**
+ * static void liste_coups(Node* n, std::string hand, Box case_depart, Box case_curr, std::string& mot,
+      bool direction, bool plus, std::vector<Coups>& tab){
+*/
+static void liste_coups_rec(Node* n, std::string hand, std::string& mot, std::vector<std::string>& tab){
+  std::string _mot = mot;
+  std::string h_iterator = hand; remove_duplicate(h_iterator);
+  for(unsigned int i =0; i<h_iterator.size(); i++){
+    // if the current letter node exists
+    Node* curr = n;
+    char pcurr = h_iterator[i];
     std::string h = hand;
-    
+    std::cout<<"pcurr = "<<pcurr<<std::endl;
+    remove(pcurr, h);
     if( curr->suffixes.count(pcurr) > 0) {
+      curr = curr->suffixes.at(pcurr);
       mot += pcurr;
-      remove(pcurr, h);
       if(curr->isWord) {
         std::cout<<"j'ai trouvé un mot qui est "<<mot<<std::endl;
         tab.push_back(mot);
       }
       std::cout<<"le mot est "<<mot<<std::endl;
       std::cout<<"la main est "<<h<<std::endl;
-      curr = curr->suffixes.at(pcurr);
-      rechercheMot(curr, h, mot, tab);
+      liste_coups_rec(curr, h, mot, tab);
     }
-    mot = "";
+    mot = _mot;
   }
+}
+
+ void Game::liste_coups(std::string hand, std::vector<std::string>& tab){
+  std::string mot = ""; 
+  //bool plus = false;
+  liste_coups_rec(lexicon.root, hand, mot, tab);
+
+  printArray(tab);
+  std::cout<<"the tab length is "<<tab.size()<<std::endl;
+}
 
 
-    /* version not working
-    char cstr[hand.size()];
-	  strcpy(cstr, hand.c_str());
-
-    for (auto& x: cstr) {
-      if (curr->suffixes.count(x)>0){
-        mot += pcurr;
-        remove(pcurr, h);
-
-        curr = curr->suffixes.at(pcurr);
-        rechercheMot(curr, h, mot, tab);
+/*
+static void generate(Box position,  std::string& word, std::string rack, Node* arc){
+  if(! position.isEmpty()){
+    goOn(position, position.getBoxLetter, word, rack, n->suffixes.at(i)), arc);
+  } else if(rack.size()>0){
+    for(char letter: rack){
+      if(alllowed(letter)){
+        goOn(position, letter, word, remove(letter, rack), arc->suffixes.[i], arc);
       }
-    }*/
-
-    /* version 1
-    if(curr->suffixes.count(pcurr) > 0) {
-
-      mot += pcurr;
-      remove(pcurr, h);
-
-      curr = curr->suffixes.at(pcurr);
-      rechercheMot(curr, h, mot, tab);
-    }*/
-
-  /*Node* curr = n;
-  std::string h = hand;
-
-  if(curr->isWord){
-      tab.push_back(mot);
+    }
   }
+}
 
-  for(unsigned int i = 0; i < hand.length(); i++){
-    char pcurr = hand[i];
 
-    if(curr->suffixes.count(pcurr) > 0){
-      curr = curr->suffixes.at(pcurr);
-      rechercheMot(curr, h, mot+pcurr, tab);
+static void goOn(Box position, char letter, std::string word, std::string rack, Node* nArc,
+                                                         Node* oArc, std::vector<Coups> tab){
+  if ( positon.x <= 0 && position.y <= 0){
+    word = letter + word;
+    if(oArc->suffixes.count(letter) > 0){
+      Coups c(position, mot, direction);
+      tab.push_back(c);
     }
 
-  }*/
+    if( nArc != nullptr){
+      if((position.i--) >0 ){
+        generate(position, word, rack, nArc);
+        if(oArc->suffixes.count(letter) > 0 && (position.i++) <16){
+          position.p = 1;
+          generate(position, word, rack, nArc);
+        }
+      }
+    }
+
+  }
+  else if (position.p > 0){
+    word = word + letter;
+    if(oArc->suffixes.count(letter) > 0){
+      Coups c(position, mot, direction);
+      tab.push_back(c);
+    }
+    if(nArc != nullptr && (position.i++) >0){
+      generate(position, word, rack, nArc);
+    }
+  
+  }
 
 }
 
-/*void recherche(Node* n, std::string hand, std::vector<std::string>& tab){
-  Node* pChild = n;
-  std::string str = "";
-
-  for(unsigned int i = 0; i < hand.length(); i++){
-    if(pChild->suffixes.at(hand[i])){ //&& pChild->isWord 
-      str = str+hand[i];
-      rechercheMot(pChild->suffixes.at(hand[i]), hand, str, tab); 
-      str = "";
-    } 
-  }
-}*/
+*/
 
 Game::~Game(){
 

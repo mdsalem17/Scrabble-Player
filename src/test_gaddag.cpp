@@ -10,20 +10,21 @@ int main() {
   Game game;
 
   std::cout<<"the lexicon length is "<<game.lexicon.length<<std::endl;
-  
-  std::string hand = "LLAEEUG"; //ALLEGUEE
-  std::cout<<"the string after removing "<<hand<<std::endl;
-  
-  std::string mot = "";
+  /**
+   *  EELELUAG AGELEELU LEUGLEAE ALUELGEE ELELAEGU
+  **/
+  std::string hand = "ALUELGEE"; //LL GUA EEE
+
+  std::string test = "ALLEGUEE"; //ALLEGUEE
+
+  std::cout<<" test before removing duplicates = "<<test<<std::endl;
+  remove_duplicate(test);
+  std::cout<<" test after removing duplicates = "<<test<<std::endl;
   
   std::vector<std::string> tab;
   
-  game.rechercheMot(game.lexicon.root, hand, mot, tab);
+  game.liste_coups(hand, tab);
 
-  //recherche(l.root, hand, tab);
-
-  std::cout<<"the tab length is "<<tab.size()<<std::endl;
-  printArray(tab);
 
   return 0 ;
 }

@@ -1,25 +1,11 @@
 #pragma once
 
 #include "spot.hpp"
+#include "board.hpp"
+#include "box.hpp"
 
 #include <iostream>
 #include <vector>
-
-
-struct Box {
-
-  public:
-    Box();
-    Box(unsigned int _i, unsigned int _j);
-    char getBoxLetter();
-    void setBoxLetter(char _letter);
-
-  private:
-    unsigned int i;
-    unsigned int j;
-    char letter;
-
-};
 
 
 /* Scrabble board */

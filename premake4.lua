@@ -33,7 +33,6 @@ solution "scrabble"
 -- pas de main.
 
 common_files = {
-  "src/board.hpp", "src/board.cpp",
   "src/spot.hpp", "src/spot.cpp",
   "src/bonus.hpp", "src/bonus.cpp",
   "src/lexicon.hpp", "src/lexicon.cpp",
