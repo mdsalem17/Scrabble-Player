@@ -2,11 +2,7 @@
 #include "include.hpp"
 //#include "box.hpp"
 /**
-struct Coups{ 
-  Box case;
-  std::string mot;
-  bool direction;
-}
+
 **/
 Game::Game(){
     lexicon.downloadLexicon();
@@ -17,39 +13,64 @@ Game::Game(){
  * static void liste_coups(Node* n, std::string hand, Box case_depart, Box case_curr, std::string& mot,
       bool direction, bool plus, std::vector<Coups>& tab){
 */
-static void liste_coups_rec(Node* n, std::string hand, std::string& mot, std::vector<std::string>& tab){
+static void liste_coups(Node* n, std::string hand, Box case_depart, Box case_curr, std::string& mot,
+      bool direction, bool plus = false, std::vector<Coups>& tab){
+//static void liste_coups_rec(Node* n, std::string hand, std::string& mot, bool plus, std::vector<std::string>& tab){
+
   std::string _mot = mot;
-  std::string h_iterator = hand; remove_duplicate(h_iterator);
+  std::string h_iterator = hand;
+  remove_duplicate(h_iterator);
   for(unsigned int i =0; i<h_iterator.size(); i++){
     // if the current letter node exists
     Node* curr = n;
-    char pcurr = h_iterator[i];
     std::string h = hand;
-    std::cout<<"pcurr = "<<pcurr<<std::endl;
-    remove(pcurr, h);
-    if( curr->suffixes.count(pcurr) > 0) {
-      curr = curr->suffixes.at(pcurr);
-      mot += pcurr;
-      if(curr->isWord) {
-        std::cout<<"j'ai trouvé un mot qui est "<<mot<<std::endl;
-        tab.push_back(mot);
+    if(case_curr.isEmpty()){
+      // la case courrente est vide
+      char pcurr = h_iterator[i];
+      remove(pcurr, h);
+      if( curr->suffixes.count(pcurr) > 0) {
+        curr = curr->suffixes.at(pcurr);
+        mot += pcurr;
+        if(curr->isWord) {
+          Coups c(case_depart,mot,direction);
+          tab.push_back(mot);
+        }
+        std::cout<<"la main est "<<h<<std::endl;
+        Coups c(case_depart,mot,direction);
+        liste_coups_rec(curr, h, mot, tab);
       }
-      std::cout<<"le mot est "<<mot<<std::endl;
-      std::cout<<"la main est "<<h<<std::endl;
-      liste_coups_rec(curr, h, mot, tab);
+    } else{ // la case concurrette n'est pas vide
+      char pcurr = case.getBoxLetter();
+      std::cout<<"pcurr = "<<pcurr<<std::endl;
+      if( curr->suffixes.count(pcurr) > 0) {
+        curr = curr->suffixes.at(pcurr);
+        mot += pcurr;
+        if(curr->isWord) {
+          std::cout<<"j'ai trouvé un mot qui est "<<mot<<std::endl;
+          tab.push_back(mot);
+        }
+        std::cout<<"le mot est "<<mot<<std::endl;
+        std::cout<<"la main est "<<h<<std::endl;
+        Coups c(case_depart,mot,direction);
+        liste_coups_rec(curr, case_depart, case_curr, mot, tab);
+      }
     }
     mot = _mot;
   }
+
 }
 
  void Game::liste_coups(std::string hand, std::vector<std::string>& tab){
   std::string mot = ""; 
   //bool plus = false;
-  liste_coups_rec(lexicon.root, hand, mot, tab);
+  Box case_depart(1,1);
+  Box case_curr();
+  liste_coups_rec(lexicon.root, hand, case_depart, case_curr, mot, true, false, tab){
 
   printArray(tab);
   std::cout<<"the tab length is "<<tab.size()<<std::endl;
 }
+
 
 
 /*

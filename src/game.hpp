@@ -5,6 +5,12 @@
 #include "player.hpp"
 #include "lexicon.hpp"
 
+struct Coups{ 
+  Box case;
+  std::string mot;
+  bool direction;
+}
+
 class Game{
 
     public:
