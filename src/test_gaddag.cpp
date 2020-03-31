@@ -21,7 +21,7 @@ int main() {
   remove_duplicate(test);
   std::cout<<" test after removing duplicates = "<<test<<std::endl;
   
-  std::vector<std::string> tab;
+  std::vector<Coups> tab;
   
   game.liste_coups(hand, tab);
 

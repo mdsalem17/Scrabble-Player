@@ -2,14 +2,22 @@
 
 #include "include.hpp"
 #include "board.hpp"
+#include "box.hpp"
 #include "player.hpp"
 #include "lexicon.hpp"
 
-struct Coups{ 
-  Box case;
-  std::string mot;
-  bool direction;
-}
+struct Coups{
+
+    Coups(Box _box, std::string _mot, bool _dir){
+        box = Box(_box);
+        mot = _mot;
+        direction = _dir;
+    }
+
+    Box box;
+    std::string mot;
+    bool direction;
+};
 
 class Game{
 
@@ -20,6 +28,6 @@ class Game{
 
         Game();
         ~Game();
-        void liste_coups(std::string hand, std::vector<std::string>& tab);
+        void liste_coups(std::string hand, std::vector<Coups>& tab);
 
 };
