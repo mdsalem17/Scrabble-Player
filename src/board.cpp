@@ -3,21 +3,8 @@
 #include <fstream>
 #include <sstream>
 
-/* Strcuture Box **************************************************/
-
-
-/******************************************************************/
-
 //default initialization
 Board::Board() {
-
-  //initialisation des boxes
-  for(unsigned int i = 0; i < 15; i++){
-    for(unsigned int j = 0; j < 15; j++){
-      boxes[i][j] = Box(i,j);
-    }
-  }
-
   //Triple word spots
   {
     Spot s(1, 3) ;
@@ -129,11 +116,11 @@ Spot& Board::operator()(unsigned char l, unsigned char c) {
 void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string word){
   if(orientation){ //vertical
     for(unsigned int i = 0; i < word.length(); i++){
-      boxes[init_i+i][init_j].setBoxLetter(word[i]);
+      spots[15*(init_i+i)+init_j].letter = word[i];
     }
   }else{ //horizontal
     for(unsigned int i = 0; i < word.length(); i++){
-      boxes[init_i][init_j+i].setBoxLetter(word[i]);
+      spots[(15*init_i)+init_j+i].letter = word[i];
     }
   }
 
@@ -141,14 +128,16 @@ void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int ini
   std::string line = "";
   for(unsigned int i = 0; i < 15; i++){
     for(unsigned int j = 0; j < 15; j++){
-      line += boxes[i][j].getBoxLetter();
+      if(spots[(15*i)+j].letter == 0)
+        line += '.';
+      else
+        line += spots[(15*i)+j].letter;
     }
     ss << line << std::endl;
     line = "";
   }
 
 }
-
 
 //display on the console
 std::ostream& operator<<(std::ostream& out, const Board& b) {
@@ -286,4 +275,3 @@ std::ostream& operator<<(std::ostream& out, const Board& b) {
 
   return out ;
 }
-

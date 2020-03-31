@@ -5,9 +5,9 @@
 
 int main() {
 
-  //std::cout << b << std::endl ;
-  
-  /*ss << "..............." << std::endl ;
+  /*std::cout << b << std::endl ;
+
+  ss << "..............." << std::endl ;
   ss << "..............." << std::endl ;
   ss << "..............." << std::endl ;
   ss << "..............." << std::endl ;
@@ -21,7 +21,9 @@ int main() {
   ss << ".......U......." << std::endl ;
   ss << ".....SCRABBLE.." << std::endl ;
   ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;*/
+  ss << "..............." << std::endl ;
+
+  b.load(ss) ;*/
 
   Board b;
   std::stringstream ss ;
@@ -34,5 +36,4 @@ int main() {
 
   std::cout << b << std::endl ;
 
-  return 0 ;
 }

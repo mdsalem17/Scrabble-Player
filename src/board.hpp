@@ -1,7 +1,6 @@
 #pragma once
 
 #include "spot.hpp"
-#include "box.hpp"
 
 #include <iostream>
 #include <vector>
@@ -23,16 +22,13 @@ struct Board {
   /**
    * ss => stringstream used to print the board later
    * orientation => 1 is vertical, 0 is horizontal
-   * init_i, init_j => statring box 
+   * init_i, init_j => statring spot 
    * word => string containting the word to be placed on the board
    * */
   void placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string word);
 
   //spots are public, and can therefore also be accessed by index
   Spot spots[225] ;
-
-  //boxes containt all the board letters by indexes (also used to place letters on the board)
-  Box boxes[15][15];
 
 } ;
 

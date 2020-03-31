@@ -2,19 +2,19 @@
 
 #include "include.hpp"
 #include "board.hpp"
-#include "box.hpp"
 #include "player.hpp"
 #include "lexicon.hpp"
 
 struct Coups{
 
-    Coups(Box _box, std::string _mot, bool _orient){
-        box = Box(_box);
+    Coups(Spot _spot, std::string _mot, bool _orient){
+        spot.letter = _spot.letter;
+        spot.bonus = _spot.bonus;
         mot = _mot;
         orientation = _orient;
     }
 
-    Box box;
+    Spot spot;
     std::string mot;
     bool orientation;
 };
