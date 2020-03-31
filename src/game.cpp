@@ -1,9 +1,7 @@
 #include "game.hpp"
 #include "include.hpp"
-//#include "box.hpp"
-/**
 
-**/
+
 Game::Game(){
     lexicon.downloadLexicon();
     std::cout << "lexicon downloaded" << std::endl;
@@ -11,10 +9,12 @@ Game::Game(){
 
 /**
  * static void liste_coups(Node* n, std::string hand, Box case_depart, Box case_curr, std::string& mot,
-      bool direction, bool plus, std::vector<Coups>& tab){
+      bool orientation, bool plus, std::vector<Coups>& tab){
 */
+
+//
 static void liste_coups_rec(Node* n, std::string hand, Box case_depart, Box case_curr, std::string& mot,
-      bool direction, bool plus, std::vector<Coups>& tab){
+      bool orientation, bool plus, std::vector<Coups>& tab){
 //static void liste_coups_rec(Node* n, std::string hand, std::string& mot, bool plus, std::vector<std::string>& tab){
 
   std::string _mot = mot;
@@ -32,12 +32,12 @@ static void liste_coups_rec(Node* n, std::string hand, Box case_depart, Box case
         curr = curr->suffixes.at(pcurr);
         mot += pcurr;
         if(curr->isWord) {
-          Coups c(case_depart,mot,direction);
+          Coups c(case_depart,mot,orientation);
           tab.push_back(c);
         }
         std::cout<<"la main est "<<h<<std::endl;
-        Coups c(case_depart,mot,direction);
-        liste_coups_rec(curr, h, case_depart, case_curr, mot, direction, plus, tab);
+        Coups c(case_depart,mot,orientation);
+        liste_coups_rec(curr, h, case_depart, case_curr, mot, orientation, plus, tab);
       }
     } else{ // la case concurrette n'est pas vide
       char pcurr = case_curr.getBoxLetter();
@@ -47,12 +47,12 @@ static void liste_coups_rec(Node* n, std::string hand, Box case_depart, Box case
         mot += pcurr;
         if(curr->isWord) {
           std::cout<<"j'ai trouvé un mot qui est "<<mot<<std::endl;
-          Coups c(case_depart,mot,direction);
+          Coups c(case_depart,mot, orientation);
           tab.push_back(c);
         }
           std::cout<<"le mot est "<<mot<<std::endl;
           std::cout<<"la main est "<<h<<std::endl;
-          liste_coups_rec(curr, h, case_depart, case_curr, mot, direction, plus, tab);
+          liste_coups_rec(curr, h, case_depart, case_curr, mot, orientation, plus, tab);
         }
       }
     }
@@ -95,7 +95,7 @@ static void goOn(Box position, char letter, std::string word, std::string rack, 
   if ( positon.x <= 0 && position.y <= 0){
     word = letter + word;
     if(oArc->suffixes.count(letter) > 0){
-      Coups c(position, mot, direction);
+      Coups c(position, mot, orientation);
       tab.push_back(c);
     }
 
@@ -113,7 +113,7 @@ static void goOn(Box position, char letter, std::string word, std::string rack, 
   else if (position.p > 0){
     word = word + letter;
     if(oArc->suffixes.count(letter) > 0){
-      Coups c(position, mot, direction);
+      Coups c(position, mot, orientation);
       tab.push_back(c);
     }
     if(nArc != nullptr && (position.i++) >0){

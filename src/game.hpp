@@ -8,15 +8,15 @@
 
 struct Coups{
 
-    Coups(Box _box, std::string _mot, bool _dir){
+    Coups(Box _box, std::string _mot, bool _orient){
         box = Box(_box);
         mot = _mot;
-        direction = _dir;
+        orientation = _orient;
     }
 
     Box box;
     std::string mot;
-    bool direction;
+    bool orientation;
 };
 
 class Game{

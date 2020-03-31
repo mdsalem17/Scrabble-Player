@@ -26,10 +26,10 @@ int main() {
   Board b;
   std::stringstream ss ;
 
-  b.placeWord(ss, 1, 0, 0, "test");
+  b.placeWord(ss, 1, 0, 0, "TEST");
   b.load(ss) ;
 
-  b.placeWord(ss, 0, 1, 2, "function");
+  b.placeWord(ss, 0, 1, 2, "FIN");
   b.load(ss) ;
 
   std::cout << b << std::endl ;
