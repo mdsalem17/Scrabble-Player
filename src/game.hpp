@@ -7,14 +7,13 @@
 
 struct Coups{
 
-    Coups(Spot _spot, std::string _mot, bool _orient){
-        spot.letter = _spot.letter;
-        spot.bonus = _spot.bonus;
+    Coups(unsigned int _spot, std::string _mot, bool _orient){
+        spot = _spot;
         mot = _mot;
         orientation = _orient;
     }
 
-    Spot spot;
+    unsigned int spot;
     std::string mot;
     bool orientation;
 };
@@ -29,5 +28,9 @@ class Game{
         Game();
         ~Game();
         void liste_coups(std::string hand, std::vector<Coups>& tab);
+
+    private:
+        void liste_coups_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr, std::string& mot,
+                                        bool orientation, bool plus, std::vector<Coups>& tab);
 
 };
