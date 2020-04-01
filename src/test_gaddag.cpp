@@ -21,9 +21,19 @@ int main() {
   remove_duplicate(test);
   std::cout<<" test after removing duplicates = "<<test<<std::endl;
   
-  std::vector<Coups> tab;
+  std::vector<Coups> tab_coups1, tab_coups2;
   
-  game.liste_coups(hand, tab);
+  game.liste_coups("NALUELGE" , tab_coups1, tab_coups2);
+
+  for (unsigned int i = 0; i < tab_coups1.size(); i++) {
+		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
+	}
+  for (unsigned int i = 0; i < tab_coups2.size(); i++) {
+		std::cout << tab_coups2.at(i).mot <<" "<<std::endl;
+	}
+
+  std::cout << tab_coups1.size() <<" "<<std::endl;
+	std::cout << tab_coups2.size() <<" "<<std::endl;
 
 
   return 0 ;
