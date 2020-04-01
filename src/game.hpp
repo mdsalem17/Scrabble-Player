@@ -27,7 +27,7 @@ class Game{
 
         Game();
         ~Game();
-        void liste_coups(std::string hand, std::vector<Coups>& tab);
+        void liste_coups(std::string hand, std::vector<Coups>& tab1, std::vector<Coups>& tab2);
 
     private:
         void liste_coups_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr, std::string& mot,

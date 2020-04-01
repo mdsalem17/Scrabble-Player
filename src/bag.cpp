@@ -32,7 +32,7 @@ unsigned int Bag::getCharPoints(char _letter) const{
         case 'N': points = 1; break;
         case 'O': points = 1; break;
         case 'P': points = 3; break;
-        case 'Q': points = 2; break;
+        case 'Q': points = 8; break;
         case 'R': points = 1; break;
         case 'S': points = 1; break;
         case 'T': points = 1; break;
