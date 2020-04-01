@@ -31,3 +31,32 @@ void printArray(std::vector<std::string> input){
 		std::cout << input.at(i) <<" "<<std::endl;
 	}
 }
+
+void remove(char c, std::string& word){
+  std::string m = "";
+  bool first = false;
+  for(unsigned int i=0; i<word.size(); i++){
+    if(first) m+= word[i];
+    else if(word[i] == c) first = true;
+    else m += word[i];
+  }
+  word = m;
+}
+
+void remove_duplicate(std::string& s){ 
+    for ( std::string::size_type i = 0; i < s.size(); i++ ){
+        std::string::size_type j = i + 1;
+        while ( j < s.size() )
+        {
+            if ( s[i] == s[j] )
+            {
+                s.erase( j, 1 );
+            }
+            else
+            {
+                ++j;
+            }
+        }
+    }
+         
+}

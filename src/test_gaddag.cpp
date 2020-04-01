@@ -1,67 +1,30 @@
 #include <sstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <time.h>
 
-#include "lexicon.hpp"
-#include "bag.hpp"
-#include "player.hpp"
+#include "game.hpp"
 
 int main() {
-  Lexicon l2;
-  l2.downloadLexicon();
-  std::cout<<"the size of the lexicon is "<<l2.size()<<std::endl;
+  Game game;
 
-  std::vector<std::string> array2 = {"ABAISSA", "ABAISSEUR", "ABORNERAIENT", "VAMPERIONS", "ART", "AMI", "URBANITE", "RAPETISSAIS", "ET", "RANGERONS", "LNKBJK HIEGB", "GERHAJ", "HERHAERHAE"};
-  for(std::string word : array2) {
-    if(l2.contains(word)) std::cout<<word<<" found"<<std::endl;
-    else std::cout<<word<<" not found"<<std::endl;
-  }
+  std::cout<<"the lexicon length is "<<game.lexicon.length<<std::endl;
   /**
-  Lexicon l;
+   *  EELELUAG AGELEELU LEUGLEAE ALUELGEE ELELAEGU
+  **/
+  std::string hand = "ALUELGEE"; //LL GUA EEE
 
-  std::pair<std::string, std::string> p = splitString("LaFrogue", 3);
-  std::cout<<std::endl<<"spliting into two words"<<std::endl;
-  std::cout<<p.first<<std::endl;
-  std::cout<<p.second<<std::endl;
+  std::string test = "ALLEGUEE"; //ALLEGUEE
 
-  std::string word = "BATEAU";
-  std::cout<<std::endl<<"testing addPlus function with word: "<<word<<std::endl;
-
-  std::vector<std::string> tab;
-  l.addPlus(word, tab);
-  std::cout<<"length of tab :"<<tab.size()<<std::endl;
-  printArray(tab);
-  std::vector<std::string> t = { "123", "314", "456"};
-  printArray(t);
-
-
-  std::cout<<std::endl<<"testing found function"<<std::endl;
-  std::vector<std::string> array = {"A", "LE", "EN", "ARC", "ART", "AMI", "LES", "LA", "ET", "ERG"};
-  for(std::string word : array) l.add(word);
-
-  for(std::string word : array) {
-    if(l.contains(word)) std::cout<<word<<" found"<<std::endl;
-    else std::cout<<word<<" not found"<<std::endl;
-  }
+  std::cout<<" test before removing duplicates = "<<test<<std::endl;
+  remove_duplicate(test);
+  std::cout<<" test after removing duplicates = "<<test<<std::endl;
   
-  std::vector<std::string> TASSA = {"AMOUR", "LECHAGE", "ARC-EN-CIEL", "AMIGDALES", "LAPINE", "ETIC"};
-  for(std::string word : TASSA) {
-    if(l.contains(word)) std::cout<<word<<" found"<<std::endl;
-    else std::cout<<word<<" not found"<<std::endl;
-  }
-**/
+  std::vector<Coups> tab;
+  
+  game.liste_coups(hand, tab);
 
-  srand(time(NULL));
-  Player player;
-  //player.bag.displayBag();
-  std::cout << "current tiles "; player.displayCurrentTiles();
-
-  player.replaceTile(0);
-  std::cout << "current tiles "; player.displayCurrentTiles();
-
-  player.replaceTile(1);
-  std::cout << "current tiles "; player.displayCurrentTiles();
 
   return 0 ;
 }

@@ -1,6 +1,7 @@
 #include "board.hpp"
 
 #include <fstream>
+#include <sstream>
 
 //default initialization
 Board::Board() {
@@ -10,7 +11,7 @@ Board::Board() {
     static const unsigned char sz = 9 ;
     static unsigned char triple_words[sz] = {
       0, 7, 14,
-      105, 112, 119,
+      105, 119,
       210, 217, 224
     } ;
     for(unsigned char i = 0; i < sz; ++i) {
@@ -110,6 +111,32 @@ Spot Board::operator()(unsigned char l, unsigned char c) const {
 
 Spot& Board::operator()(unsigned char l, unsigned char c) {
   return spots[l*15 + c] ;
+}
+
+void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string word){
+  if(orientation){ //vertical
+    for(unsigned int i = 0; i < word.length(); i++){
+      spots[15*(init_i+i)+init_j].letter = word[i];
+    }
+  }else{ //horizontal
+    for(unsigned int i = 0; i < word.length(); i++){
+      spots[(15*init_i)+init_j+i].letter = word[i];
+    }
+  }
+
+  //stringstream
+  std::string line = "";
+  for(unsigned int i = 0; i < 15; i++){
+    for(unsigned int j = 0; j < 15; j++){
+      if(spots[(15*i)+j].letter == 0)
+        line += '.';
+      else
+        line += spots[(15*i)+j].letter;
+    }
+    ss << line << std::endl;
+    line = "";
+  }
+
 }
 
 //display on the console
@@ -248,4 +275,3 @@ std::ostream& operator<<(std::ostream& out, const Board& b) {
 
   return out ;
 }
-

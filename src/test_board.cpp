@@ -1,33 +1,51 @@
-#include "board.hpp"
+#include "game.hpp"
 
 #include <iostream>
 #include <sstream>
 
 int main() {
-  Board b ;
 
-  std::cout << b << std::endl ;
-
+  /*Board b;
   std::stringstream ss ;
-  ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
-  ss << "....PROJET....." << std::endl ;
-  ss << ".......O......." << std::endl ;
-  ss << ".......U......." << std::endl ;
-  ss << ".......E......." << std::endl ;
-  ss << ".......U......." << std::endl ;
-  ss << ".....SCRABBLE.." << std::endl ;
-  ss << "..............." << std::endl ;
-  ss << "..............." << std::endl ;
 
+  b.placeWord(ss, 1, 0, 0, "TEST");
   b.load(ss) ;
 
-  std::cout << b << std::endl ;
+  b.placeWord(ss, 0, 1, 2, "FIN");
+  b.load(ss) ;
 
-  return 0 ;
+  std::cout << b << std::endl ;*/
+
+  std::vector<Coups> tab_coups1;
+  std::vector<Coups> tab_coups2;
+  std::stringstream ss ;
+  Game game;
+
+  game.board.placeWord(ss, 1, 0, 0, "TEST");
+  game.board.load(ss) ;
+
+  game.board.placeWord(ss, 0, 1, 2, "FIN");
+  game.board.load(ss) ;
+  
+  //game.board.placeWord(ss, 0, 7, 1, "Z");
+  //game.board.load(ss) ;
+
+  std::cout << game.board << std::endl;
+
+  //add player.hand
+  game.liste_coups("NALUELGE" , tab_coups1, tab_coups2);
+
+  for (unsigned int i = 0; i < tab_coups1.size(); i++) {
+		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
+	}
+  for (unsigned int i = 0; i < tab_coups2.size(); i++) {
+		std::cout << tab_coups2.at(i).mot <<" "<<std::endl;
+	}
+
+  std::cout << tab_coups1.size() <<" "<<std::endl;
+	std::cout << tab_coups2.size() <<" "<<std::endl;
+
+  std::cout << game.board << std::endl;
+  //std::cout <<" board size "<< sizeof(game.board.spots)/sizeof(game.board.spots[0]) << std::endl;
+
 }
