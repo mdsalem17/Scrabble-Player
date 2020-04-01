@@ -25,11 +25,14 @@ int main() {
 
   game.board.placeWord(ss, 0, 1, 2, "FIN");
   game.board.load(ss) ;
+  
+  game.board.placeWord(ss, 0, 7, 1, "Z");
+  game.board.load(ss) ;
 
   std::cout << game.board << std::endl;
 
   //add player.hand
-  game.liste_coups("ALUELGEN" , tab_coups);
+  game.liste_coups("NALUELGE" , tab_coups);
 
   for (unsigned int i = 0; i < tab_coups.size(); i++) {
 		std::cout << tab_coups.at(i).mot <<" "<<std::endl;
