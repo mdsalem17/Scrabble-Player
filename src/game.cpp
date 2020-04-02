@@ -6,11 +6,6 @@ Game::Game(){
     std::cout << "lexicon downloaded" << std::endl;
 }
 
-/**
- * static void liste_coups(Node* n, std::string hand, Spot case_depart, Spot case_curr, std::string& mot,
-      bool orientation, bool plus, std::vector<Coups>& tab){
-*/
-
 void Game::liste_coups_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
                                     std::string& mot, bool orientation, bool plus, std::vector<Coups>& tab){
 
@@ -177,6 +172,25 @@ static void goOn(Spot position, char letter, std::string word, std::string rack,
 
 */
 
+static void deplacement(bool orientation, bool plus, unsigned int& case_curr){
+  if(!plus){
+    //on se deplace verticalement
+    if(orientation){
+      case_curr-= 15;
+    } else{
+      //on se deplace horizontalement
+      case_curr--;
+    }
+  } else{
+      //on se deplace verticalement
+    if(orientation){
+      case_curr+= 15;
+    } else{
+      //on se deplace horizontalement
+      case_curr++;
+    }
+  }
+}
 
 void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
           std::string& mot, bool orientation, bool plus, std::vector<Coups>& tab, std::stack <State>& moves){
@@ -184,67 +198,48 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 	if(!moves.empty()) moves.pop();
 
 	char pcurr;
-  Node* curr;
+  Node* curr = n;
   char p = '+';
+
+  //si la case n'est pas vide
   if(board.spots[case_curr].letter != 0){
-      //si la case n'est pas vide
-		curr = n;
 
 		pcurr = board.spots[case_curr].letter;
-		if( curr->suffixes.count(pcurr) > 0) {
+		if( curr->suffixes.count(pcurr) > 0 ) {
 			curr = curr->suffixes.at(pcurr);
 			mot += pcurr;
+      std::cout<<"-------------------- ajout pcurr (dans if case non vide) "<<mot<<std::endl;
 			if(curr->isWord) {
-			  //std::cout<<"j'ai trouvé un mot qui est "<<mot<<std::endl;
 			  Coups c(case_depart, mot, orientation);
 			  tab.push_back(c);
 			}
 
 			// on suit le sens inverse de la lecture
-			if(!plus){
-				//on se deplace verticalement
-				if(orientation){
-          case_curr-= 15;
-          } else{
-          //on se deplace horizontalement
-            case_curr--;
-          }
-        } else{
-          //on se deplace verticalement
-          if(orientation){
-          case_curr+= 15;
-          } else{
-          //on se deplace horizontalement
-            case_curr++;
-          }
-        }
-        State s(hand, curr, case_curr); 
-        moves.push(s);
+      deplacement(orientation, plus, case_curr);
+      State s(hand, curr, case_curr); 
+      moves.push(s);
 
-        moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
-      }
-    } else{
+      moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+    }
+  }
+  // la case est vide 
+  else{
 		//std::cout<<"la case est vide "<<case_curr<<std::endl; 
-		// la case est vide
-    curr = n;
-		if( curr->suffixes.count(p) > 0  ) {
+		if( curr->suffixes.count(p) > 0 ) {
 			curr = curr->suffixes.at(p);
-			mot = reverseStr(mot);
+			//mot = reverseStr(mot);
+      mot += p;
+      std::cout<<"mot => "<<mot<<std::endl;
 			plus = true;
 			case_curr = case_depart;
-			if(orientation){
-					case_curr+= 15;
-				} else{
-					//on se deplace horizontalement
-					case_curr++;
-			}
 			
+      deplacement(orientation, plus, case_curr);
 			State s(hand, curr, case_curr); 
 			moves.push(s);
 
-			std::cout<<"la case courrente est "<<case_curr<<std::endl;
+			//std::cout<<"la case courrente est "<<case_curr<<std::endl;
 			moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
-      } else{
+    } else {
       std::string _mot = mot;
       std::string h_iterator = hand;
       unsigned int _case_curr = case_curr;
@@ -255,69 +250,37 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
         std::string h = hand;
         remove(pcurr, h);
         //std::cout<<"pcurr = la main du joueur "<<pcurr<<std::endl;
-        if( curr->suffixes.count(pcurr) > 0  ) {
+        if( curr->suffixes.count(pcurr) > 0 ) {
           curr = curr->suffixes.at(pcurr);
-          //std::cout<<"in else pcurr "<< pcurr <<std::endl;          
+          std::cout<<"in else pcurr "<< pcurr <<std::endl;          
           mot += pcurr;
 
           if(curr->isWord) {
             unsigned int next = case_curr;
-            if(!plus){
-              //on se deplace verticalement
-              if(orientation){
-                next-= 15;
-              } else{
-                //on se deplace horizontalement
-                next--;
-              }
-            } else{
-                //on se deplace verticalement
-              if(orientation){
-                next+= 15;
-              } else{
-                //on se deplace horizontalement
-                next++;
-              }
-            }
+            deplacement(orientation, plus, next);
             if(board.spots[next].letter == 0){
               Coups c(case_depart, mot, orientation);
               tab.push_back(c);
             }
           }
           
-            // on suit le sens inverse de la lecture
-          if(!plus){
-              //on se deplace verticalement
-            if(orientation){
-              case_curr-= 15;
-            } else{
-              //on se deplace horizontalement
-              case_curr--;
-            }
-          } else{
-              //on se deplace verticalement
-            if(orientation){
-              case_curr+= 15;
-            } else{
-              //on se deplace horizontalement
-              case_curr++;
-            }
-          }
+          // on suit le sens inverse de la lecture
+          deplacement(orientation, plus, case_curr);
           State s(hand, curr, case_curr); 
           moves.push(s);
           
-          std::cout<<"la case courrente est "<<case_curr<<std::endl;
+          //std::cout<<"la case courrente est "<<case_curr<<std::endl;
           moves_list_rec(curr, h, case_depart, _case_curr, mot, orientation, plus, tab, moves);
         }
-        mot = _mot;
-        _case_curr = case_curr;
-      }
+      mot = _mot;
+      _case_curr = case_curr;
+    }
     }
   }
 }
 
 void Game::moves_list(std::string hand, std::vector<Coups>& tab1, std::stack <State>& moves){
-/*  
+  /*
   for(unsigned int case_depart=0; case_depart<225; case_depart++){
 	  bool orientation;
 	  bool plus = false;
@@ -340,12 +303,12 @@ void Game::moves_list(std::string hand, std::vector<Coups>& tab1, std::stack <St
   }
   */
 
-  unsigned int case_depart = 20;
+  unsigned int case_depart = 16;
 	bool orientation;
 	bool plus = false;
   orientation = false;
 	unsigned int case_curr = case_depart;
-  std::string mot = ""; 
+  std::string mot = "";
   moves_list_rec(lexicon.root, hand, case_depart, case_curr, mot, orientation, plus, tab1, moves);
 
 }

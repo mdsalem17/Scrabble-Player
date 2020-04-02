@@ -27,14 +27,14 @@ int main() {
   game.board.placeWord(ss, 0, 1, 2, "FIN");
   game.board.load(ss) ;
   
-  game.board.placeWord(ss, 0, 7, 7, "T");
+  game.board.placeWord(ss, 0, 7, 7, "E");
   game.board.load(ss) ;
 
-  std::cout << game.board << std::endl;
+  //std::cout << game.board << std::endl;
   std::stack <State> moves;
 
   //add player.hand
-  game.moves_list("ALUELGE", tab_coups1, moves);
+  game.moves_list("ANUELGE", tab_coups1, moves);
 
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
@@ -45,6 +45,8 @@ int main() {
 
   std::cout << tab_coups1.size() <<" "<<std::endl;
 	//std::cout << tab_coups2.size() <<" "<<std::endl;
+
+  std::cout << moves.size() <<" "<<std::endl;
 
   std::cout << game.board << std::endl;
   //std::cout <<" board size "<< sizeof(game.board.spots)/sizeof(game.board.spots[0]) << std::endl;

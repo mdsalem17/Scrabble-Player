@@ -23,7 +23,7 @@ int main() {
   
   std::vector<Coups> tab_coups1, tab_coups2;
   
-  game.liste_coups("NALUELGE" , tab_coups1, tab_coups2);
+  ///game.liste_coups("NALUELGE" , tab_coups1, tab_coups2);
 
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
