@@ -104,10 +104,10 @@ void Lexicon::downloadLexicon(){
     std::vector<std::string> array = loadFromFile();
     for(std::string word: array){
         addPlus(word, lexicon);
-/**        for(std::string curr: lexicon){
+        for(std::string curr: lexicon){
             add(curr);
-        } */
-        add(word);
+        }
+//        add(word);
         lexicon.clear();
     }
 }
