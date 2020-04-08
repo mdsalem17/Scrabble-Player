@@ -6,6 +6,36 @@ Game::Game(){
     std::cout << "lexicon downloaded" << std::endl;
 }
 
+static bool moves_available(unsigned int case_curr, bool orientation, bool plus){
+  
+  if(case_curr >= 225)
+    return false;
+
+  if(orientation){
+    //vertical
+    if(plus){
+      if( case_curr >= 210 && case_curr<=224)
+        return false;
+    } else{
+      if( case_curr<= 14 )
+        return false;
+    }
+  } else{
+    //horizontal
+    if(plus){
+      if( case_curr %15 == 14 )
+        return false;
+    } 
+    else{
+      //on se deplace horizontalement
+      if( case_curr%15 == 0 )
+        return false;
+    }
+  }
+  
+  return true;
+}
+
 static void deplacement(bool orientation, bool plus, unsigned int& case_curr){
   if(!plus){
     if(orientation){
@@ -39,19 +69,17 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 			mot += pcurr;
       std::cout<<"-------------------- ajout pcurr (dans if case non vide) "<<mot<<std::endl;
       if(curr->isWord) {
-            unsigned int next = case_curr;
-            deplacement(orientation, plus, next);
-            if(board.spots[next].letter == 0){
-              Coups c(case_depart, mot, orientation);
-              tab.push_back(c);
-            }
+          Coups c(case_depart, mot, orientation);
+          tab.push_back(c);
       }
       
       deplacement(orientation, plus, case_curr);
-      State s(hand, curr, case_curr); 
-      moves.push(s);
+      if(moves_available(case_curr, orientation, plus)){
+        State s(hand, curr, case_curr);
+        moves.push(s);
 
-      moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+        moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+      }
     }
   }  else{
 		if( curr->suffixes.count(p) > 0 ) {
@@ -83,19 +111,17 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
           mot += pcurr;
 
           if(curr->isWord) {
-            unsigned int next = case_curr;
-            deplacement(orientation, plus, next);
-            if(board.spots[next].letter == 0){
-              Coups c(case_depart, mot, orientation);
-              tab.push_back(c);
-            }
+            Coups c(case_depart, mot, orientation);
+            tab.push_back(c);
           }
           
           deplacement(orientation, plus, case_curr);
-          State s(hand, curr, case_curr); 
-          moves.push(s);
-            
-          moves_list_rec(curr, h, case_depart, _case_curr, mot, orientation, plus, tab, moves);
+          if(moves_available(case_curr, orientation, plus)){
+            State s(hand, curr, case_curr); 
+            moves.push(s);
+              
+            moves_list_rec(curr, h, case_depart, _case_curr, mot, orientation, plus, tab, moves);
+          }
         }
         mot = _mot;
         _case_curr = case_curr;
