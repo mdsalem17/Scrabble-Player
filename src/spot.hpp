@@ -26,7 +26,8 @@ struct Spot {
   Bonus bonus ;
 
   //constructeur par copie
-  /*Spot& operator=(const Spot& s){
+  /*
+    Spot& operator=(const Spot& s){
     Spot spot;
     spot.letter = s.letter;
     spot.bonus = s.bonus;
