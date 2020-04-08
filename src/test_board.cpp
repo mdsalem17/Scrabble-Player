@@ -50,25 +50,14 @@ int main() {
 		std::cout << tab_coups2.at(i).mot <<" "<<std::endl;
 	}*/
 
-  if(game.verify_crosswords(112, false)){
+  std::cout << game.board << std::endl;
+
+  if(game.verify_crosswords(20, false)){
     std::cout <<" le crossword existe "<<std::endl;
   } else std::cout <<" le crossword n'existe pas "<<std::endl;
 
-  std::vector<std::string> arraay= {"B+ATEAU",
-"AB+TEAU",
-"TAB+EAU",
-"ETAB+AU",
-"AETAB+U",
-"UAETAB+"
-};
-  for(std::string word : arraay){
-    std::cout <<" le mot est "<<word<<std::endl;
-    if(game.lexicon.contains(word)){
-      std::cout <<" le crossword existe "<<std::endl;
-    } else std::cout <<" le crossword n'existe pas "<<std::endl;
-  }
-  std::cout <<" ES+UL"<<std::endl;
-  if(game.lexicon.contains("ES+UL")){
+  std::cout << "SET+T" << std::endl;
+  if(game.lexicon.contains("SET+T")){
     std::cout <<" le crossword existe "<<std::endl;
   } else std::cout <<" le crossword n'existe pas "<<std::endl;
 
