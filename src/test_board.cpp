@@ -52,7 +52,7 @@ int main() {
 
   std::cout << game.board << std::endl;
 
-  if(game.verify_crosswords(20, false)){
+  if(game.verify_crosswords(0, false)){
     std::cout <<" le crossword existe "<<std::endl;
   } else std::cout <<" le crossword n'existe pas "<<std::endl;
 
