@@ -152,6 +152,30 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
   }
 }
 
+bool Game::verify_crosswords(unsigned int case_curr, bool orientation){
+  std::string word = "";
+  unsigned int _case = case_curr;
+  do{
+    word +=board.spots[_case].letter;
+    std::cout<<" crossword --- la case courante ="<<_case<<std::endl;
+    if(moves_available(case_curr, orientation, false))
+      deplacement(!orientation, false, _case);
+  } while( board.spots[_case].letter != 0  && moves_available(case_curr, orientation, false) );
+
+  _case = case_curr;
+  deplacement(!orientation, true, _case);
+  word += "+";
+
+  while( board.spots[_case].letter != 0 && moves_available(case_curr, orientation, true)){
+    word += board.spots[_case].letter;
+    deplacement(!orientation, true, _case);
+  }
+
+
+  std::cout<<"le mot du crossword ="<<word<<"la frogue "<<std::endl;
+  return lexicon.contains(word);
+}
+
 void Game::moves_list(std::string hand, std::vector<Coups>& tab1, std::stack <State>& moves){
 
   unsigned int case_depart = 19;

@@ -26,17 +26,20 @@ int main() {
   game.board.placeWord(ss, 1, 0, 0, "TEST");
   game.board.load(ss) ;
 
-  game.board.placeWord(ss, 0, 1, 2, "FIN");
+  game.board.placeWord(ss, 0, 1, 1, "AFIN");
   game.board.load(ss) ;
   
-  game.board.placeWord(ss, 0, 7, 7, "E");
+  game.board.placeWord(ss, 1, 6, 7, "SEULE");
+  game.board.load(ss) ;
+
+  game.board.placeWord(ss, 0, 7, 7, "EST");
   game.board.load(ss) ;
 
   //std::cout << game.board << std::endl;
   std::stack <State> moves;
 
   //add player.hand
-  game.moves_list("ANUELGE", tab_coups1, moves);
+  //game.moves_list("ANUELGE", tab_coups1, moves);
 
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
@@ -46,6 +49,28 @@ int main() {
   for (unsigned int i = 0; i < tab_coups2.size(); i++) {
 		std::cout << tab_coups2.at(i).mot <<" "<<std::endl;
 	}*/
+
+  if(game.verify_crosswords(112, false)){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;
+
+  std::vector<std::string> arraay= {"B+ATEAU",
+"AB+TEAU",
+"TAB+EAU",
+"ETAB+AU",
+"AETAB+U",
+"UAETAB+"
+};
+  for(std::string word : arraay){
+    std::cout <<" le mot est "<<word<<std::endl;
+    if(game.lexicon.contains(word)){
+      std::cout <<" le crossword existe "<<std::endl;
+    } else std::cout <<" le crossword n'existe pas "<<std::endl;
+  }
+  std::cout <<" ES+UL"<<std::endl;
+  if(game.lexicon.contains("ES+UL")){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;
 
   std::cout << tab_coups1.size() <<" "<<std::endl;
 
