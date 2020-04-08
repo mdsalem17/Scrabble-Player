@@ -52,6 +52,37 @@ static void deplacement(bool orientation, bool plus, unsigned int& case_curr){
   }
 }
 
+bool Game::verify_crosswords(unsigned int case_curr, bool orientation){
+  std::string word = "";
+  unsigned int _case = case_curr;
+
+  if(board.spots[_case].letter != 0){
+    word +=board.spots[_case].letter;
+  }
+
+  while( board.spots[_case].letter != 0  && moves_available(_case, !orientation, false) ){
+    deplacement(!orientation, false, _case);
+    if(board.spots[_case].letter != 0)
+    word +=board.spots[_case].letter;
+  }
+
+  _case = case_curr;
+  if( word != ""){
+    word += "+";
+  }
+  if(moves_available(_case, !orientation, true))
+    deplacement(!orientation, true, _case);
+
+  while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
+    word += board.spots[_case].letter;
+      deplacement(!orientation, true, _case);
+  }
+
+  std::cout<<"le mot du crossword = "<<word<<std::endl;
+
+  return (word.size() == 2 && word[1] == '+') || word.empty() || lexicon.contains(word);
+}
+
 void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
           std::string& mot, bool orientation, bool plus, std::vector<Coups>& tab, std::stack <State>& moves){
 
@@ -67,15 +98,12 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 		if( curr->suffixes.count(pcurr) > 0 ) {
 			curr = curr->suffixes.at(pcurr);
 			mot += pcurr;
-      std::cout<<"-------------------- ajout pcurr (dans if case non vide) "<<mot<<std::endl;
       if(curr->isWord) {
           Coups c(case_depart, mot, orientation);
           tab.push_back(c);
       }
       
       deplacement(orientation, plus, case_curr);
-      std::cout<<"la case courante = "<<case_curr<<std::endl;
-      std::cout<<"la lettre courante = "<<board.spots[case_curr].letter<<std::endl;
       if(moves_available(case_curr, orientation, plus)){
         State s(hand, curr, case_curr);
         moves.push(s);
@@ -86,11 +114,9 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
         if( curr->suffixes.count(pcurr) > 0 ) {
           curr = curr->suffixes.at(pcurr);
      			mot += pcurr;
-          std::cout<<"la lettre courante = pcurr ="<<pcurr<<std::endl;
           if( curr->suffixes.count(p) > 0 ) {
             curr = curr->suffixes.at(p);
             mot += p;
-            std::cout<<"mot => "<<mot<<std::endl;
             plus = true;
             case_curr = case_depart;
             
@@ -98,6 +124,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
             State s(hand, curr, case_curr); 
             moves.push(s);
 
+            //if(verify_crosswords(case_curr, orientation))
             moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
           }
         }
@@ -107,7 +134,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 		if( curr->suffixes.count(p) > 0 ) {
 			curr = curr->suffixes.at(p);
       mot += p;
-      std::cout<<"mot => "<<mot<<std::endl;
 			plus = true;
 			case_curr = case_depart;
 			
@@ -129,20 +155,20 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 
         if( curr->suffixes.count(pcurr) > 0 ) {
           curr = curr->suffixes.at(pcurr);
-          std::cout<<"in else pcurr "<< pcurr <<std::endl;          
           mot += pcurr;
-
-          if(curr->isWord) {
-            Coups c(case_depart, mot, orientation);
-            tab.push_back(c);
-          }
-          
-          deplacement(orientation, plus, case_curr);
-          if(moves_available(case_curr, orientation, plus)){
-            State s(hand, curr, case_curr); 
-            moves.push(s);
-              
-            moves_list_rec(curr, h, case_depart, _case_curr, mot, orientation, plus, tab, moves);
+          if(verify_crosswords(case_curr, orientation)){
+            if(curr->isWord) {
+              Coups c(case_depart, mot, orientation);
+              tab.push_back(c);
+            }
+            
+            deplacement(orientation, plus, case_curr);
+            if(moves_available(case_curr, orientation, plus)){
+              State s(hand, curr, case_curr); 
+              moves.push(s);
+                
+              moves_list_rec(curr, h, case_depart, _case_curr, mot, orientation, plus, tab, moves);
+            }
           }
         }
         mot = _mot;
@@ -151,43 +177,12 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
     }
   }
 }
-
-bool Game::verify_crosswords(unsigned int case_curr, bool orientation){
-  std::string word = "";
-  unsigned int _case = case_curr;
-
-  if(board.spots[_case].letter != 0){
-    word +=board.spots[_case].letter;
-  }
-
-  while( board.spots[_case].letter != 0  && moves_available(_case, !orientation, false) ){
-    deplacement(!orientation, false, _case);
-    word +=board.spots[_case].letter;
-    std::cout<<" crossword --- la case courante ="<<_case<<std::endl;
-  }
-
-  _case = case_curr;
-  if( word != ""){
-    word += "+";
-  }
-
-
-  while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
-    word += board.spots[_case].letter;
-    deplacement(!orientation, true, _case);
-  }
-
-  std::cout<<"le mot du crossword ="<<word<<"la frogue "<<std::endl;
-
-  return lexicon.contains(word);
-}
-
 void Game::moves_list(std::string hand, std::vector<Coups>& tab1, std::stack <State>& moves){
 
-  unsigned int case_depart = 19;
+  unsigned int case_depart = 111;
 	bool orientation;
 	bool plus = false;
-  orientation = false;
+  orientation = true;
 	unsigned int case_curr = case_depart;
   std::string mot = "";
   moves_list_rec(lexicon.root, hand, case_depart, case_curr, mot, orientation, plus, tab1, moves);

@@ -26,7 +26,7 @@ int main() {
   game.board.placeWord(ss, 1, 0, 0, "TEST");
   game.board.load(ss) ;
 
-  game.board.placeWord(ss, 0, 1, 1, "AFIN");
+  game.board.placeWord(ss, 0, 1, 2, "FIN");
   game.board.load(ss) ;
   
   game.board.placeWord(ss, 1, 6, 7, "SEULE");
@@ -34,12 +34,17 @@ int main() {
 
   game.board.placeWord(ss, 0, 7, 7, "EST");
   game.board.load(ss) ;
+  
+  //game.board.placeWord(ss, 1, 7, 6, "GLU");
+//  game.board.load(ss) ;
+
+  std::cout << game.board << std::endl;
 
   //std::cout << game.board << std::endl;
   std::stack <State> moves;
 
   //add player.hand
-  //game.moves_list("ANUELGE", tab_coups1, moves);
+  game.moves_list("TANUELG", tab_coups1, moves);
 
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
@@ -50,20 +55,39 @@ int main() {
 		std::cout << tab_coups2.at(i).mot <<" "<<std::endl;
 	}*/
 
-  std::cout << game.board << std::endl;
-
+/*
   if(game.verify_crosswords(0, false)){
     std::cout <<" le crossword existe "<<std::endl;
   } else std::cout <<" le crossword n'existe pas "<<std::endl;
-
-  std::cout << "SET+T" << std::endl;
-  if(game.lexicon.contains("SET+T")){
+  
+  if(game.verify_crosswords(20, false)){
     std::cout <<" le crossword existe "<<std::endl;
   } else std::cout <<" le crossword n'existe pas "<<std::endl;
+  
+  if(game.verify_crosswords(30, false)){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;
+  
+  if(game.verify_crosswords(112, false)){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;  
+
+  if(game.verify_crosswords(112, true)){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;
+  
+  if(game.verify_crosswords(0, true)){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;
+  
+  if(game.verify_crosswords(20, true)){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;
+*/
 
   std::cout << tab_coups1.size() <<" "<<std::endl;
 
-  std::cout << moves.size() <<" "<<std::endl;
+//  std::cout << moves.size() <<" "<<std::endl;
 
   std::cout << game.board << std::endl;
 
