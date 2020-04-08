@@ -74,11 +74,33 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
       }
       
       deplacement(orientation, plus, case_curr);
+      std::cout<<"la case courante = "<<case_curr<<std::endl;
+      std::cout<<"la lettre courante = "<<board.spots[case_curr].letter<<std::endl;
       if(moves_available(case_curr, orientation, plus)){
         State s(hand, curr, case_curr);
         moves.push(s);
 
         moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+      }  else{
+        pcurr = board.spots[case_curr].letter;
+        if( curr->suffixes.count(pcurr) > 0 ) {
+          curr = curr->suffixes.at(pcurr);
+     			mot += pcurr;
+          std::cout<<"la lettre courante = pcurr ="<<pcurr<<std::endl;
+          if( curr->suffixes.count(p) > 0 ) {
+            curr = curr->suffixes.at(p);
+            mot += p;
+            std::cout<<"mot => "<<mot<<std::endl;
+            plus = true;
+            case_curr = case_depart;
+            
+            deplacement(orientation, plus, case_curr);
+            State s(hand, curr, case_curr); 
+            moves.push(s);
+
+            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+          }
+        }
       }
     }
   }  else{
@@ -132,7 +154,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 
 void Game::moves_list(std::string hand, std::vector<Coups>& tab1, std::stack <State>& moves){
 
-  unsigned int case_depart = 16;
+  unsigned int case_depart = 19;
 	bool orientation;
 	bool plus = false;
   orientation = false;
