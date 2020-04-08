@@ -173,8 +173,8 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation){
 
 
   while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
-    deplacement(!orientation, true, _case);
     word += board.spots[_case].letter;
+    deplacement(!orientation, true, _case);
   }
 
   std::cout<<"le mot du crossword ="<<word<<"la frogue "<<std::endl;
