@@ -23,6 +23,7 @@ int main() {
   std::stringstream ss ;
   Game game;
 
+
   game.board.placeWord(ss, 1, 0, 0, "TEST");
   game.board.load(ss) ;
 
@@ -34,7 +35,7 @@ int main() {
 
   game.board.placeWord(ss, 0, 7, 7, "EST");
   game.board.load(ss) ;
-  
+
   //game.board.placeWord(ss, 1, 7, 6, "GLU");
 //  game.board.load(ss) ;
 
@@ -43,8 +44,14 @@ int main() {
   //std::cout << game.board << std::endl;
   std::stack <State> moves;
 
+/*
+  if(game.verify_crosswords(0, false)){
+    std::cout <<" le crossword existe "<<std::endl;
+  } else std::cout <<" le crossword n'existe pas "<<std::endl;
+  */
+
   //add player.hand
-  game.moves_list("TANUELG", tab_coups1, moves);
+  game.moves_list("ATNUELG", tab_coups1, moves);
 
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
@@ -89,6 +96,6 @@ int main() {
 
 //  std::cout << moves.size() <<" "<<std::endl;
 
-  std::cout << game.board << std::endl;
+//  std::cout << game.board << std::endl;
 
 }
