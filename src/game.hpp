@@ -6,6 +6,7 @@
 #include "lexicon.hpp"
 #include "include.hpp"
 #include <bits/stdc++.h> 
+#include <ctype.h>
 
 struct State{
 	std::string hand;

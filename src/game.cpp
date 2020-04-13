@@ -51,12 +51,15 @@ static void deplacement(bool orientation, bool plus, unsigned int& case_curr){
     }
   }
 }
-
-bool Game::verify_crosswords(unsigned int case_curr, bool orientation){
+// la case_curr  doit être vide si le caractère c est précisé
+bool Game::verify_crosswords(unsigned int case_curr, bool orientation, char c = ' '){
   std::string word = "";
+  if(!isblank(c)){
+    word += c;
+  }
   unsigned int _case = case_curr;
 
-  if(board.spots[_case].letter != 0){
+  if(board.spots[_case].letter != 0 && isblank(c)){
     word +=board.spots[_case].letter;
   }
 
