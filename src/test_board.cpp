@@ -19,27 +19,21 @@ int main() {
   **/
 
   std::vector<Coups> tab_coups1;
-  std::vector<Coups> tab_coups2;
   std::stringstream ss ;
   Game game;
 
-
-  game.board.placeWord(ss, 1, 0, 2, "BLATTE");
+  game.board.placeWord(ss, 1, 0, 0, "TEST");
   game.board.load(ss) ;
 
-  game.board.placeWord(ss, 0, 3, 0, "BATEAUX");
+  game.board.placeWord(ss, 0, 1, 2, "FIN");
   game.board.load(ss) ;
   
-  /*
-  game.board.placeWord(ss, 0, 0, 0, "TAG");
-  game.board.load(ss) ;
-  */
   game.board.placeWord(ss, 1, 6, 7, "SEULE");
   game.board.load(ss) ;
 
   game.board.placeWord(ss, 0, 7, 7, "EST");
   game.board.load(ss) ;
-
+  
   //game.board.placeWord(ss, 1, 7, 6, "GLU");
 //  game.board.load(ss) ;
 
@@ -48,14 +42,8 @@ int main() {
   //std::cout << game.board << std::endl;
   std::stack <State> moves;
 
-/*
-  if(game.verify_crosswords(2, false)){
-    std::cout <<" le crossword existe "<<std::endl;
-  } else std::cout <<" le crossword n'existe pas "<<std::endl;
-  */
-
   //add player.hand
-  game.moves_list("LSCE", tab_coups1, moves);
+  game.moves_list("TANUELG", tab_coups1, moves);
 
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
@@ -100,6 +88,37 @@ int main() {
 
 //  std::cout << moves.size() <<" "<<std::endl;
 
-//  std::cout << game.board << std::endl;
+  std::cout << game.board << std::endl;
+  
+
+  std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl
+            << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl
+            << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+
+  std::vector<Coups> tab1;
+  Game g;
+
+
+  g.board.placeWord(ss, 1, 0, 2, "BLATTE");
+  g.board.load(ss) ;
+
+  g.board.placeWord(ss, 0, 3, 0, "BATEAUX");
+  g.board.load(ss) ;
+  
+  g.board.placeWord(ss, 1, 6, 7, "SEULE");
+  g.board.load(ss) ;
+
+  g.board.placeWord(ss, 0, 7, 7, "EST");
+  g.board.load(ss) ;
+
+  std::cout << g.board << std::endl;
+
+
+  g.moves_list("LSCE", tab1, moves);
+
+  for (unsigned int i = 0; i < tab1.size(); i++) {
+		std::cout << tab1.at(i).mot <<" "<<std::endl;
+	}
+  std::cout << tab1.size() <<" "<<std::endl;
 
 }

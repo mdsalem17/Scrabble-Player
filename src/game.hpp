@@ -48,7 +48,7 @@ class Game{
         void moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
           std::string& mot, bool orientation, bool plus, std::vector<Coups>& tab, std::stack <State>& moves);
      public:     
-        bool verify_crosswords(unsigned int case_curr, bool orientation);
+        bool verify_crosswords(unsigned int case_curr, bool orientation, char c = ' ');
 
 
 };
