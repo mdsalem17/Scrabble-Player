@@ -24,12 +24,16 @@ int main() {
   Game game;
 
 
-  game.board.placeWord(ss, 1, 0, 0, "TEST");
+  game.board.placeWord(ss, 1, 0, 2, "BLATTE");
   game.board.load(ss) ;
 
-  game.board.placeWord(ss, 0, 1, 2, "FIN");
+  game.board.placeWord(ss, 0, 3, 0, "BATEAUX");
   game.board.load(ss) ;
   
+  /*
+  game.board.placeWord(ss, 0, 0, 0, "TAG");
+  game.board.load(ss) ;
+  */
   game.board.placeWord(ss, 1, 6, 7, "SEULE");
   game.board.load(ss) ;
 
@@ -45,13 +49,13 @@ int main() {
   std::stack <State> moves;
 
 /*
-  if(game.verify_crosswords(0, false)){
+  if(game.verify_crosswords(2, false)){
     std::cout <<" le crossword existe "<<std::endl;
   } else std::cout <<" le crossword n'existe pas "<<std::endl;
   */
 
   //add player.hand
-  game.moves_list("ATNUELG", tab_coups1, moves);
+  game.moves_list("LSCE", tab_coups1, moves);
 
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
