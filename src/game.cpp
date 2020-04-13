@@ -211,7 +211,7 @@ void Game::moves_list(std::string hand, std::vector<Coups>& tab1, std::stack <St
   unsigned int case_depart = 0;
 	bool orientation;
 	bool plus = false;
-  orientation = false;
+  orientation = true;
 	unsigned int case_curr = case_depart;
   std::string mot = "";
   moves_list_rec(lexicon.root, hand, case_depart, case_curr, mot, orientation, plus, tab1, moves);
