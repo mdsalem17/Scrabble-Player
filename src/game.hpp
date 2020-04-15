@@ -20,6 +20,7 @@ struct State{
     }
 };
 
+
 struct Coups{
 
     Coups(unsigned int _spot, std::string _mot, bool _orient){
@@ -43,6 +44,10 @@ class Game{
         Game();
         ~Game();
         void moves_list(std::string hand, std::vector<Coups>& tab1, std::stack<State>& moves);
+        std::vector<std::pair<unsigned int, std::string>> get_crosswords(unsigned int case_depart, std::string word, bool orientation);
+        unsigned int word_score(unsigned int case_depart, std::string word, bool orientation);
+        unsigned int play_score(unsigned int case_depart, std::string word, bool orientation, bool empty);
+
 
     private:
         void moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,

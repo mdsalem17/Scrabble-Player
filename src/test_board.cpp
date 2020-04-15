@@ -21,7 +21,37 @@ int main() {
   std::vector<Coups> tab_coups1;
   std::stringstream ss ;
   Game game;
+  unsigned int case_depart = 128;
+  std::string word = "H+AI";
+  bool orientation = true;
+  bool empty = false;
 
+  game.board.placeWord(ss, 1, 6, 7, "TRACAGE");
+  game.board.load(ss) ;
+
+  std::vector<std::pair<unsigned int, std::string>> tab = game.get_crosswords(case_depart, word, orientation);
+  std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl
+            << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl
+            << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+
+  std::cout<<" le nombre de crossword "<<tab.size()<<std::endl;
+  for(unsigned int i=0; i<tab.size(); i++){
+    std::cout<<i<<" mot du crossword "<<tab[i].second<<std::endl;
+  }
+  unsigned score = game.play_score(case_depart, word, orientation, empty);
+  std::cout<<"the score = "<<score<<std::endl<<std::endl;
+
+
+
+  std::stack <State> moves;
+  game.moves_list("EOGOAHI", tab_coups1, moves);
+
+  for (unsigned int i = 0; i < tab_coups1.size(); i++) {
+		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
+	}
+  std::cout << game.board << std::endl;
+
+/*
   game.board.placeWord(ss, 1, 0, 0, "TEST");
   game.board.load(ss) ;
 
@@ -33,12 +63,21 @@ int main() {
 
   game.board.placeWord(ss, 0, 7, 7, "EST");
   game.board.load(ss) ;
+
+  unsigned int case_curr = 0;
+  std::cout << "case_curr = "<<case_curr<<std::endl;
+  std::cout<<" bonus letter factor = "<<game.board.spots[case_curr].bonus.letter_factor<< std::endl;
+  std::cout<<" bonus word factor = "<<game.board.spots[case_curr].bonus.word_factor<< std::endl;
+
   
   //game.board.placeWord(ss, 1, 7, 6, "GLU");
-//  game.board.load(ss) ;
+  //game.board.load(ss) ;
 
   std::cout << game.board << std::endl;
-
+  std::cout << "case_curr = "<<case_curr<<std::endl;
+  std::cout<<" bonus letter factor = "<<game.board.spots[case_curr].bonus.letter_factor<< std::endl;
+  std::cout<<" bonus word factor = "<<game.board.spots[case_curr].bonus.word_factor<< std::endl;
+/*
   //std::cout << game.board << std::endl;
   std::stack <State> moves;
 
@@ -48,7 +87,7 @@ int main() {
   for (unsigned int i = 0; i < tab_coups1.size(); i++) {
 		std::cout << tab_coups1.at(i).mot <<" "<<std::endl;
 	}
-
+*/
   /*
   for (unsigned int i = 0; i < tab_coups2.size(); i++) {
 		std::cout << tab_coups2.at(i).mot <<" "<<std::endl;
@@ -87,7 +126,7 @@ int main() {
   std::cout << tab_coups1.size() <<" "<<std::endl;
 
 //  std::cout << moves.size() <<" "<<std::endl;
-
+/*
   std::cout << game.board << std::endl;
   
 
@@ -120,5 +159,5 @@ int main() {
 		std::cout << tab1.at(i).mot <<" "<<std::endl;
 	}
   std::cout << tab1.size() <<" "<<std::endl;
-
+*/
 }

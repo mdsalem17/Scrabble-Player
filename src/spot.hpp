@@ -25,15 +25,6 @@ struct Spot {
   //the bonus present on the spot
   Bonus bonus ;
 
-  //constructeur par copie
-  /*
-    Spot& operator=(const Spot& s){
-    Spot spot;
-    spot.letter = s.letter;
-    spot.bonus = s.bonus;
-    return spot;
-  }*/
-
 } ;
 
 //display of the spot contents
