@@ -9,12 +9,12 @@ class Player{
 
         Player();
         ~Player();
-        unsigned int getCurrentNbTiles();
-        void displayCurrentTiles();
-        void replaceTile(int pos);
+        unsigned int getNbHandLetters();
+        bool replaceLetters(std::string word);
+        std::string handToString();
 
     private:
-        unsigned int nbCurrentTiles;
-        char *currentTiles;
+        unsigned int nbHandLetters;
+        unsigned int hand[26];
 
 };

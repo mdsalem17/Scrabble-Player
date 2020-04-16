@@ -70,6 +70,7 @@ void Bag::displayBag(){
 }
 
 char Bag::generateLetter(){
+
     int random = rand() % nbLetters;
     char result = tabLetters[random];
     tabLetters[random] = tabLetters[nbLetters-1];

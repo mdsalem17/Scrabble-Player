@@ -113,16 +113,28 @@ Spot& Board::operator()(unsigned char l, unsigned char c) {
   return spots[l*15 + c] ;
 }
 
-void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string word){
+void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string &word){
+  
+  std::string word_final = "";
+  
   if(orientation){ //vertical
     for(unsigned int i = 0; i < word.length(); i++){
-      spots[15*(init_i+i)+init_j].letter = word[i];
+      if(spots[15*(init_i+i)+init_j].letter == 0){
+        spots[15*(init_i+i)+init_j].letter = word[i];
+        word_final += word[i];
+      }
     }
   }else{ //horizontal
     for(unsigned int i = 0; i < word.length(); i++){
-      spots[(15*init_i)+init_j+i].letter = word[i];
+      if(spots[(15*init_i)+init_j+i].letter == 0){
+        spots[(15*init_i)+init_j+i].letter = word[i];
+        word_final += word[i];
+      }
     }
   }
+
+  word = word_final;
+  std::cout << "in placeWord, final word = " << word << std::endl;
 
   //stringstream
   std::string line = "";

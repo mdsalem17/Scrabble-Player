@@ -2,6 +2,7 @@
 
 
 Game::Game(){
+    score = 0;
     lexicon.downloadLexicon();
     std::cout << "lexicon downloaded" << std::endl;
 }
@@ -51,6 +52,73 @@ static void deplacement(bool orientation, bool plus, unsigned int& case_curr){
     }
   }
 }
+
+void Game::adapt_word(unsigned int& case_depart, bool orientation, std::string& mot){
+  std::string word = "";
+  unsigned int _case = case_depart;
+  unsigned int i = 0;
+  word += mot[i];
+  i++;
+  
+  while( mot[i] != '+' && moves_available(_case, orientation, false)){
+    word += mot[i];
+    deplacement(orientation, false, _case);
+    i++;
+  };
+
+  word = reverseStr(word);
+
+  i++;
+  while( i<mot.size()){
+    word += mot[i];
+    i++;
+  }
+
+  //std::cout<<"nouvelle case depart = "<<_case<<" et le mot = "<<word<<std::endl;
+  mot = word;
+}
+
+//returns true if word does not exist on the board, else returns false
+bool Game::check_word_not_on_board(unsigned int case_depart, bool orientation, std::string mot){
+  //adapt_word(case_depart, orientation, mot);
+  unsigned int diff = 0;
+  unsigned int _case = case_depart;
+  unsigned int i = 0;
+
+  //std::cout << "mot in check function = "<<  mot << std::endl;
+
+  while( mot[i] != '+' && i < mot.length() && moves_available(_case, orientation, false)){
+    
+    //std::cout << "1 mot[i] = " << mot[i] << ", spots.letter = " << board.spots[_case].letter << std::endl;
+    if(mot[i] != board.spots[_case].letter){
+      diff++;
+    }
+    deplacement(orientation, false, _case);
+    i++;
+  }
+
+  if(mot[i] == '+'){
+    _case = case_depart;
+    deplacement(orientation, true, _case);
+    i++;
+  }
+
+  while(i < mot.length() && moves_available(_case, orientation, true)){
+    
+    //std::cout << "2 mot[i] = " << mot[i] << ", spots.letter = " << board.spots[_case].letter << std::endl;
+    
+    if(mot[i] != board.spots[_case].letter){
+      diff++;
+    }
+    deplacement(orientation, true, _case);
+    i++;
+  }
+
+  //std::cout << mot << " diff = "<< diff << std::endl;
+
+  return (diff > 0);
+}
+
 // la case_curr n'est pas vide, alors on n'a pas besoin de préciser le caractère c
 bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
   std::string word = "";
@@ -82,7 +150,7 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
       deplacement(!orientation, true, _case);
   }
 
-  std::cout<<case_curr<<" et le mot du crossword = "<<word<<std::endl;
+  //std::cout<<case_curr<<" et le mot du crossword = "<<word<<std::endl;
 
   return (word.size() == 2 && word[1] == '+') || word.empty() || lexicon.contains(word);
 }
@@ -100,44 +168,35 @@ std::vector<std::pair<unsigned int, std::string>> Game::get_crosswords(unsigned 
       i++;
     }
 
-    {
-      std::string _word = "";
-      unsigned int _case = case_curr;
+    std::string _word = "";
+    unsigned int _case = case_curr;
 
-      _word += word[i];
-      std::cout<<case_curr<<" et le mot du crossword = "<<_word<<std::endl;
+    _word += word[i];
 
-      do{
-        if( moves_available(_case, !orientation, false) ){
-          deplacement(!orientation, false, _case);
-          if(board.spots[_case].letter != 0){
-            _word +=board.spots[_case].letter;
-          }
+    do{
+      if( moves_available(_case, !orientation, false) ){
+        deplacement(!orientation, false, _case);
+        if(board.spots[_case].letter != 0){
+          _word +=board.spots[_case].letter;
         }
-      } while( board.spots[_case].letter != 0 );
-
-      std::cout<<case_curr<<" et le mot avant le plus du crossword = "<<_word<<std::endl;
-
-      _case = case_curr;
-      if( _word != ""){
-        _word += "+";
       }
-      if(moves_available(_case, !orientation, true))
-        deplacement(!orientation, true, _case);
+    } while( board.spots[_case].letter != 0 );
 
-      while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
-        std::cout<<_case<<" et le spot du crossword = "<<_word<<std::endl;
-        _word += board.spots[_case].letter;
-        std::cout<<_case<<" et le spot du crossword = "<<_word<<std::endl;
-        deplacement(!orientation, true, _case);
-      }
+    _case = case_curr;
+    if( _word != ""){
+      _word += "+";
+    }
+    if(moves_available(_case, !orientation, true))
+      deplacement(!orientation, true, _case);
 
-      std::cout<<case_curr<<" et le mot du crossword = "<<_word<<std::endl;
+    while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
+      _word += board.spots[_case].letter;
+      deplacement(!orientation, true, _case);
+    }
 
-      if(lexicon.contains(_word)){
-        std::pair<unsigned int, std::string> p(case_curr, _word);
-        tab.push_back(p);
-      }
+    if(lexicon.contains(_word)){
+      std::pair<unsigned int, std::string> p(case_curr, _word);
+      tab.push_back(p);
     }
 
     deplacement(orientation, plus, case_curr);
@@ -183,27 +242,19 @@ unsigned int Game::play_score(unsigned int case_depart, std::string word, bool o
   
   std::vector<std::pair<unsigned int, std::string>> tab = get_crosswords(case_depart, word, orientation);
   unsigned int _score = word_score(case_depart, word, orientation);
-  std::cout<<"the score before addding crosswords = "<<_score<<std::endl;
 
   for(std::pair<unsigned int, std::string> p : tab){
     unsigned int _s = word_score(p.first, p.second, !orientation);
-    std::cout<<"the score of the crossword = "<<_s<<std::endl;
     _score += _s;
-
   }
-  
-  std::cout<<" word score = "<<_score<<std::endl;
+
   if(empty) bingo = 50;
 
   return _score + bingo;
 }
 
-
-
 void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
-          std::string& mot, bool orientation, bool plus, std::vector<Coups>& tab, std::stack <State>& moves){
-
-	if(!moves.empty()) moves.pop();
+          std::string& mot, bool orientation, bool plus, Coups& meilleurCoup){
 
 	char pcurr;
   Node* curr = n;
@@ -215,20 +266,17 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
     if( curr->suffixes.count(pcurr) > 0 ) {
       curr = curr->suffixes.at(pcurr);
       mot += pcurr;
-        if(curr->isWord) {
-          Coups c(case_depart, mot, orientation);
-          tab.push_back(c);
+      if(curr->isWord) {
+        Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
+        if(c.score > meilleurCoup.score){  //&& check_word_not_on_board(c.spot, c.orientation, c.mot)){
+          meilleurCoup = c;
         }
-        
-      std::cout<<"pcurr -> "<<pcurr<<std::endl;
-      std::cout<<"case_curr -> "<<case_curr<<std::endl;
-      std::cout<<"word "<<mot<<std::endl;
+      }
+
       if(moves_available(case_curr, orientation, plus)){
         deplacement(orientation, plus, case_curr);
-        State s(hand, curr, case_curr);
-        moves.push(s);
 
-        moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+        moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
       }  else{
         if( curr->suffixes.count(p) > 0 ) {
           curr = curr->suffixes.at(p);
@@ -238,28 +286,23 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
               
           if(moves_available(case_curr, orientation, plus)){
             deplacement(orientation, plus, case_curr);
-            State s(hand, curr, case_curr); 
-            moves.push(s);
 
-            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
           }
         }
       }
     }
   }  else{
-    std::cout<<case_curr<<" -> est une case vide; debut de la recherche "<<std::endl;
 		if( curr->suffixes.count(p) > 0 ) {
 			curr = curr->suffixes.at(p);
       mot += p;
-      std::cout<<"mot => "<<mot<<std::endl;
 			plus = true;
 			case_curr = case_depart;
 			
       if(moves_available(case_curr, orientation, plus)){
         deplacement(orientation, plus, case_curr);
-        State s(hand, curr, case_curr); 
-        moves.push(s);
-        moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, tab, moves);
+
+        moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
       }
     } else {
       std::string _mot = mot;
@@ -276,23 +319,16 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
             curr = curr->suffixes.at(pcurr);
             mot += pcurr;
               if(curr->isWord) {
-                Coups c(case_depart, mot, orientation);
-                tab.push_back(c);
+                Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
+                if(c.score > meilleurCoup.score){ //&& check_word_not_on_board(c.spot, c.orientation, c.mot)){
+                  meilleurCoup = c;
+                }
               }
               if(moves_available(case_curr, orientation, plus)){
                   deplacement(orientation, plus, case_curr);
-                  std::cout<<" je me suis déplacé"<<std::endl;
-                  std::cout<<"word "<<mot<<std::endl;
-                  std::cout<<"box "<<case_curr<<std::endl;
-                  State s(hand, curr, case_curr); 
-                  moves.push(s);
                     
-                  moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, tab, moves);
+                  moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
               } else{
-                std::cout<<" je n'ai pas pu me déplacer"<<std::endl;
-                std::cout<<"word "<<mot<<std::endl;
-                std::cout<<"box "<<case_curr<<std::endl;
-
                 if( curr->suffixes.count(p) > 0 ) {
                   curr = curr->suffixes.at(p);
                   mot += p;
@@ -300,12 +336,8 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                   case_curr = case_depart;
                   if(moves_available(case_curr, orientation, plus)){
                     deplacement(orientation, plus, case_curr);
-                    std::cout<<" je me suis déplacé"<<std::endl;
-                    std::cout<<"word "<<mot<<std::endl;
-                    std::cout<<"box "<<case_curr<<std::endl;
-                    State s(hand, curr, case_curr); 
-                    moves.push(s);
-                    moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, tab, moves);
+                    
+                    moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
                   }
                 }   
               }
@@ -319,16 +351,46 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
   }
 }
 
-void Game::moves_list(std::string hand, std::vector<Coups>& tab1, std::stack <State>& moves){
-
-  unsigned int case_depart = 128;
-	bool orientation;
-	bool plus = false;
-  orientation = true;
-	unsigned int case_curr = case_depart;
+Coups Game::moves_list(std::string hand, unsigned int case_depart, bool orientation){
+ 
+  bool plus = false;
+  unsigned int case_curr = case_depart;
   std::string mot = "";
-  moves_list_rec(lexicon.root, hand, case_depart, case_curr, mot, orientation, plus, tab1, moves);
+  Coups meilleurCoup(0, "", true, 0);
+
+  moves_list_rec(lexicon.root, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
+
+  return meilleurCoup;
 }
+
+Coups Game::trouver_meilleur_coups(std::string hand){
+
+  Coups coup1(0, "", true, 0);
+  Coups coup2(0, "", true, 0);
+
+  Coups meilleurCoup(0, "", true, 0);
+  
+  for(unsigned int i = 0; i < 225; i++){
+    if(board.spots[i].letter != 0){
+      coup1 = moves_list(hand, i, true);
+      coup2 = moves_list(hand, i, false);
+    
+      if(coup1.score > coup2.score){
+        if(coup1.score > meilleurCoup.score){
+          meilleurCoup = coup1;
+        }
+      }else{
+        if(coup2.score > meilleurCoup.score){
+          meilleurCoup = coup2;
+        }
+      }
+    }
+  }
+
+  return meilleurCoup;
+}
+
+
 
 Game::~Game(){
 

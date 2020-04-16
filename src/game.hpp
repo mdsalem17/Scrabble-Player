@@ -4,34 +4,30 @@
 #include "board.hpp"
 #include "player.hpp"
 #include "lexicon.hpp"
-#include "include.hpp"
 #include <bits/stdc++.h> 
 #include <ctype.h>
 
-struct State{
-	std::string hand;
-	Node* n;
-	unsigned int case_curr;
-
-    State(std::string _hand, Node* _n, unsigned int _case_curr){
-        hand = _hand;
-        n = _n;
-        case_curr = _case_curr;
-    }
-};
-
-
 struct Coups{
 
-    Coups(unsigned int _spot, std::string _mot, bool _orient){
+    Coups(unsigned int _spot, std::string _mot, bool _orient, unsigned int _score){
         spot = _spot;
         mot = _mot;
         orientation = _orient;
+        score = _score;
+    }
+
+    Coups& operator=(Coups c){
+        spot = c.spot;
+        mot = c.mot;
+        orientation = c.orientation;
+        score = c.score;
+        return *this;
     }
 
     unsigned int spot;
     std::string mot;
     bool orientation;
+    unsigned int score;
 };
 
 class Game{
@@ -41,19 +37,24 @@ class Game{
         Player player;
         Lexicon lexicon;
 
+        unsigned int score;
+
         Game();
         ~Game();
-        void moves_list(std::string hand, std::vector<Coups>& tab1, std::stack<State>& moves);
+        Coups trouver_meilleur_coups(std::string hand);
+        Coups moves_list(std::string hand, unsigned int case_depart, bool orientation);
         std::vector<std::pair<unsigned int, std::string>> get_crosswords(unsigned int case_depart, std::string word, bool orientation);
         unsigned int word_score(unsigned int case_depart, std::string word, bool orientation);
         unsigned int play_score(unsigned int case_depart, std::string word, bool orientation, bool empty);
-
+        void adapt_word(unsigned int& case_depart, bool orientation, std::string& mot);
 
     private:
         void moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
-          std::string& mot, bool orientation, bool plus, std::vector<Coups>& tab, std::stack <State>& moves);
-     public:     
-        bool verify_crosswords(unsigned int case_curr, bool orientation, char c = ' ');
+                    std::string& mot, bool orientation, bool plus, Coups& meilleurCoup);    
+        bool verify_crosswords(unsigned int case_curr, bool orientation, char c = ' ');    
+        
+    public:    
+        bool check_word_not_on_board(unsigned int case_depart, bool orientation, std::string mot);
 
 
 };
