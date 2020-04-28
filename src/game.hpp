@@ -41,7 +41,7 @@ class Game{
 
         Game();
         ~Game();
-        Coups trouver_meilleur_coups(std::string hand);
+        Coups find_best_move(std::string hand);
         Coups moves_list(std::string hand, unsigned int case_depart, bool orientation);
         std::vector<std::pair<unsigned int, std::string>> get_crosswords(unsigned int case_depart, std::string word, bool orientation);
         unsigned int word_score(unsigned int case_depart, std::string word, bool orientation);
@@ -51,10 +51,6 @@ class Game{
     private:
         void moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
                     std::string& mot, bool orientation, bool plus, Coups& meilleurCoup);    
-        bool verify_crosswords(unsigned int case_curr, bool orientation, char c = ' ');    
-        
-    public:    
-        bool check_word_not_on_board(unsigned int case_depart, bool orientation, std::string mot);
-
+        bool verify_crosswords(unsigned int case_curr, bool orientation, char c = ' ');
 
 };

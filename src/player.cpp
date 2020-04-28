@@ -38,16 +38,18 @@ std::string Player::handToString(){
 
 bool Player::replaceLetters(std::string word){
 
-    for(unsigned int i = 0; i < word.length(); i++){
+    if(word.size() > 0){
+        for(unsigned int i = 0; i < word.size(); i++){
         
-        if(bag.getNbLetters() > 0){
-            hand[ word[i] - 'A' ]--;
-            char letter = bag.generateLetter();
-            hand[ letter - 'A']++;
-        }else{
-            return false;
-        }
+            if(bag.getNbLetters() > 0){
+                hand[ word[i] - 'A' ]--;
+                char letter = bag.generateLetter();
+                hand[ letter - 'A']++;
+            }else{
+                return false;
+            }
 
+        }
     }
 
     for(unsigned int i = 0; i < ALPHA; i++){
