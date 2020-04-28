@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 
 #include <time.h>
@@ -22,9 +23,13 @@ int main() {
   std::cout << game.board << std::endl;
 
   bool playingGame = true;
-
-  while(playingGame && game.player.bag.getNbLetters() > 0){
+  unsigned int compteur = 0;
+  while(playingGame && game.player.bag.getNbLetters() > 0 ){
     
+    std::cout << "++++++++++++++++++++++++++++++++++++++++"
+              << "iteration = "<< compteur<<"+++++++" << std::endl;
+
+
     std::cout << game.player.handToString() << std::endl;
 
     Coups coup = game.find_best_move(game.player.handToString());
@@ -47,6 +52,12 @@ int main() {
     std::cout << "score total = " << game.score << std::endl;
 
     std::cout << game.board << std::endl;
+
+    std::ofstream myfile;
+    myfile.open ("board.txt");
+    game.board.save(myfile);
+    myfile.close();
+    compteur++;
 
   }
 
