@@ -73,12 +73,10 @@ Board::Board() {
 }
 
 //i/o to files
-void Board::save(std::ostream& out) {
+void Board::save(std::ostream& out, std::string hand) {
   //write the grid of chars
+  out<< "suzette scrabble ";
   for(unsigned char i = 0; i < 225; ++i) {
-    if( i%15 == 0) {
-      out << std::endl ;
-    }
     if(spots[i].letter) {
       //a letter is present, write it
       out << spots[i].letter ;
@@ -87,6 +85,7 @@ void Board::save(std::ostream& out) {
       out << "." ;
     }
   }
+  out<<" "<< hand;
 }
 
 void Board::load(std::istream& in) {

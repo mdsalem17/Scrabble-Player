@@ -95,7 +95,10 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
       deplacement(!orientation, false, _case);
       if(board.spots[_case].letter != 0)
         word +=board.spots[_case].letter;
+    } else{
+      break;
     }
+    //std::cout << "verify_crosswords = " << _case ;
   } while( board.spots[_case].letter != 0 );
 
   _case = case_curr;
@@ -137,7 +140,10 @@ std::vector<std::pair<unsigned int, std::string>> Game::get_crosswords(unsigned 
         if(board.spots[_case].letter != 0){
           _word +=board.spots[_case].letter;
         }
+      } else{
+        break;
       }
+      //std::cout << "get_crosswords = " << _case <<" et le mot  = "<<_word<<std::endl;
     } while( board.spots[_case].letter != 0 );
 
     _case = case_curr;
@@ -159,7 +165,6 @@ std::vector<std::pair<unsigned int, std::string>> Game::get_crosswords(unsigned 
 
     deplacement(orientation, plus, case_curr);
   }
-
   return tab;
 }
 
@@ -246,7 +251,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
       }
       if(moves_available(case_curr, orientation, plus)){
         deplacement(orientation, plus, case_curr);
-
         moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
       }  else{
         if( curr->suffixes.count(p) > 0 ) {
@@ -257,14 +261,13 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
               
           if(moves_available(case_curr, orientation, plus)){
             deplacement(orientation, plus, case_curr);
-
             moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
           }
         }
       }
     }
   }  else{  
-		if( curr->suffixes.count(p) > 0 ) {
+		/**if( curr->suffixes.count(p) > 0 ) {
 			curr = curr->suffixes.at(p);
       mot += p;
 			plus = true;
@@ -275,61 +278,76 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 
         moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
       }
-    } else {
+    }**/ //else {
       std::string _mot = mot;
       std::string h_iterator = hand;
       unsigned int _case_curr = case_curr;
       remove_duplicate(h_iterator);
+      if(!plus) h_iterator += "+";
       for(unsigned int i =0; i<h_iterator.size(); i++){
         Node* curr = n;
         pcurr = h_iterator[i];
         std::string h = hand;
-        remove(pcurr, h);
+        if(pcurr != p) remove(pcurr, h);
+
         if( curr->suffixes.count(pcurr) > 0 ) {
-          if(verify_crosswords(case_curr, orientation, pcurr)){
-            curr = curr->suffixes.at(pcurr);
-            mot += pcurr;
-              if(curr->isWord && mot.size() > 1) {
-                if(moves_available(case_curr, orientation, plus)){
-                  unsigned int next = case_curr;
-                  deplacement(orientation, plus, next);
-                  if(board.spots[next].letter == 0){
+          /**/
+          if( pcurr == p ) {
+            curr = curr->suffixes.at(p);
+            mot += p;
+            unsigned int next = case_depart;
+            plus = true;
+            if(moves_available(next, orientation, plus)){
+              deplacement(orientation, plus, next);
+              moves_list_rec(curr, hand, case_depart, next, mot, orientation, plus, meilleurCoup);
+            }
+          }else{ /**/
+            if(verify_crosswords(case_curr, orientation, pcurr)){
+              curr = curr->suffixes.at(pcurr);
+              mot += pcurr;
+                if(curr->isWord && mot.size() > 1) {
+                  if(moves_available(case_curr, orientation, plus)){
+                    unsigned int next = case_curr;
+                    deplacement(orientation, plus, next);
+                    if(board.spots[next].letter == 0){
+                      Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
+                      if(c.score > meilleurCoup.score){
+                        meilleurCoup = c;
+                      }
+                    }
+                  } else {
                     Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
                     if(c.score > meilleurCoup.score){
                       meilleurCoup = c;
                     }
                   }
-                } else {
-                  Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
-                  if(c.score > meilleurCoup.score){
-                    meilleurCoup = c;
-                  }
                 }
-              }
-              /**/
-              if(moves_available(case_curr, orientation, plus)){
-                  deplacement(orientation, plus, case_curr);
-
-                  moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
-              } else{
-                if( curr->suffixes.count(p) > 0 ) {
-                  curr = curr->suffixes.at(p);
-                  mot += p;
-                  plus = true;
-                  case_curr = case_depart;
-                  if(moves_available(case_curr, orientation, plus)){
+                /**/
+                if(moves_available(case_curr, orientation, plus)){
                     deplacement(orientation, plus, case_curr);
 
                     moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
-                  }
-                }   
-              }
+                } else{
+                  if( curr->suffixes.count(p) > 0 ) {
+                    curr = curr->suffixes.at(p);
+                    mot += p;
+                    plus = true;
+                    case_curr = case_depart;
+                    if(moves_available(case_curr, orientation, plus)){
+                      deplacement(orientation, plus, case_curr);
+
+                      moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
+                    }
+                  }   
+                }
+            }
           }
         }
+        //}
         mot = _mot;
         case_curr = _case_curr;
       }
-    }
+    /*}*/
   }
 }
 

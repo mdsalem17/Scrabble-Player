@@ -24,13 +24,15 @@ int main() {
 
   bool playingGame = true;
   unsigned int compteur = 0;
-  while(playingGame && game.player.bag.getNbLetters() > 0 ){
+  while( (playingGame || game.player.handToString().size() > 0) &&  compteur < 55  ){
     
     std::cout << "++++++++++++++++++++++++++++++++++++++++"
               << "iteration = "<< compteur<<"+++++++" << std::endl;
 
 
     std::cout << game.player.handToString() << std::endl;
+    
+
 
     Coups coup = game.find_best_move(game.player.handToString());
 
@@ -39,7 +41,7 @@ int main() {
 
     game.score += coup.score;
 
-    std::cout << "nb tiles total = " << game.player.bag.getNbLetters() << std::endl;
+    std::cout << "nb tiles total = " << game.player.bag.getNbLetters() +  game.player.handToString().size() << std::endl;
     game.adapt_word(coup.spot, coup.orientation, coup.mot);
 
     std::cout << "--" << coup.mot << "--" << std::endl;
@@ -48,15 +50,20 @@ int main() {
     game.board.load(ss);
 
     playingGame = game.player.replaceLetters(coup.mot);
-
+    
+    std::cout << "playingGame = " << playingGame << std::endl;
     std::cout << "score total = " << game.score << std::endl;
 
     std::cout << game.board << std::endl;
-
     std::ofstream myfile;
-    myfile.open ("board.txt");
-    game.board.save(myfile);
+    char c = compteur + 'A';
+    std::string file = "board";
+    //file+= c;
+    file+= ".txt";
+    myfile.open (file);
+    game.board.save(myfile, game.player.handToString());
     myfile.close();
+
     compteur++;
 
   }

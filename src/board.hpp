@@ -12,7 +12,7 @@ struct Board {
   Board() ;
 
   //i/o to files
-  void save(std::ostream& out) ;
+  void save(std::ostream& out, std::string hand) ;
   void load(std::istream& in) ;
 
   //access to the spots by coordinates
