@@ -45,6 +45,9 @@ bool Player::replaceLetters(std::string word){
                 hand[ word[i] - 'A' ]--;
                 char letter = bag.generateLetter();
                 hand[ letter - 'A']++;
+            }else if(bag.getNbLetters() < 7 && nbHandLetters > 0){
+                hand[ word[i] - 'A' ]--;
+                nbHandLetters--;
             }else{
                 return false;
             }
@@ -62,7 +65,10 @@ bool Player::replaceLetters(std::string word){
     }
     std::cout << std::endl;
 
-    return true;
+    if(nbHandLetters > 0)
+        return true;
+    else
+        return false;
 }
 
 unsigned int Player::getNbHandLetters(){
