@@ -25,7 +25,7 @@ int main() {
   bool playingGame = true;
   unsigned int compteur = 0;
   unsigned int tiles_used = 0;
-  while( (playingGame || game.player.handToString().size() > 0) /*&&  compteur < 50*/  ){
+  while( (playingGame || game.player.handToString().size() > 0)){
     
     std::cout << "++++++++++++++++++++++++++++++++++++++++"
               << "iteration = "<< compteur<<"+++++++" << std::endl;
