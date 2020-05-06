@@ -240,12 +240,20 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
             Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
             if(c.score > meilleurCoup.score){
               meilleurCoup = c;
+            } else if(c.score == meilleurCoup.score){
+              if(meilleurCoup.mot.size() > c.mot.size()){
+                meilleurCoup = c;
+              }
             }
           }
         } else {
           Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
           if(c.score > meilleurCoup.score){
             meilleurCoup = c;
+          } else if(c.score == meilleurCoup.score){
+            if(meilleurCoup.mot.size() > c.mot.size()){
+              meilleurCoup = c;
+            }
           }
         }
       }
@@ -313,12 +321,20 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                       Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
                       if(c.score > meilleurCoup.score){
                         meilleurCoup = c;
+                      }else if(c.score == meilleurCoup.score){
+                        if(meilleurCoup.mot.size() > c.mot.size()){
+                          meilleurCoup = c;
+                        }
                       }
                     }
                   } else {
                     Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
                     if(c.score > meilleurCoup.score){
                       meilleurCoup = c;
+                    }else if(c.score == meilleurCoup.score){
+                      if(meilleurCoup.mot.size() > c.mot.size()){
+                        meilleurCoup = c;
+                      }
                     }
                   }
                 }
@@ -421,6 +437,10 @@ Coups Game::find_best_move(std::string hand){
   for(unsigned int i = 1; i < tab_coups.size(); i++){
     if(meilleurCoup.score < tab_coups.at(i).score){
       meilleurCoup = tab_coups.at(i);
+    } else if(meilleurCoup.score == tab_coups.at(i).score){
+      if(meilleurCoup.mot.size() > tab_coups.at(i).mot.size()){
+        meilleurCoup = tab_coups.at(i);
+      }
     }
   }
 
