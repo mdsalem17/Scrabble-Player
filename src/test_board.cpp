@@ -24,7 +24,7 @@ int main() {
 
   bool playingGame = true;
   unsigned int compteur = 0;
-  while( (playingGame || game.player.handToString().size() > 0) &&  compteur < 55  ){
+  while( (playingGame || game.player.handToString().size() > 0) &&  compteur < 50  ){
     
     std::cout << "++++++++++++++++++++++++++++++++++++++++"
               << "iteration = "<< compteur<<"+++++++" << std::endl;
