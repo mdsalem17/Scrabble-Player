@@ -27,8 +27,7 @@ int main() {
   unsigned int tiles_used = 0;
   while( (playingGame || game.player.handToString().size() > 0)){
     
-    std::cout << "++++++++++++++++++++++++++++++++++++++++"
-              << "iteration = "<< compteur<<"+++++++" << std::endl;
+    std::cout << "+++++++++++++++++++" << "iteration = "<< compteur<<"+++++++++++++++++++++" << std::endl;
 
 
     std::cout << game.player.handToString() << std::endl;
@@ -49,9 +48,13 @@ int main() {
     game.board.placeWord(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
     game.board.load(ss);
 
-    std::cout << "nouveau coup.mot **" << coup.mot <<"**" << std::endl; 
     tiles_used += coup.mot.size();
     std::cout << "total calculated tiles used = " << tiles_used << std::endl ;
+
+    /*if(tiles_used == 7){
+      game.score += BINGO;
+      std::cout << "applied bingo for this word" << std::endl;
+    }*/
 
     playingGame = game.player.replaceLetters(coup.mot);
     
@@ -67,6 +70,8 @@ int main() {
     myfile.open (file_name);
     game.board.save(myfile, game.player.handToString());
     myfile.close();
+
+    //tiles_used = 0;
 
     compteur++;
 
