@@ -41,6 +41,7 @@ class Game{
 
         Game();
         ~Game();
+        Coups find_first_move(std::string hand);
         Coups find_best_move(std::string hand);
         Coups moves_list(std::string hand, unsigned int case_depart, bool orientation);
         std::vector<std::pair<unsigned int, std::string>> get_crosswords(unsigned int case_depart, std::string word, bool orientation);

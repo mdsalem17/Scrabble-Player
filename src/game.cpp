@@ -134,34 +134,37 @@ std::vector<std::pair<unsigned int, std::string>> Game::get_crosswords(unsigned 
 
     _word += word[i];
 
-    do{
-      if( moves_available(_case, !orientation, false) ){
-        deplacement(!orientation, false, _case);
-        if(board.spots[_case].letter != 0){
-          _word +=board.spots[_case].letter;
+    if(board.spots[_case].letter == 0){
+      
+      do{
+        if( moves_available(_case, !orientation, false) ){
+          deplacement(!orientation, false, _case);
+          if(board.spots[_case].letter != 0){
+            _word +=board.spots[_case].letter;
+          }
+        } else{
+          break;
         }
-      } else{
-        break;
+        //std::cout << "get_crosswords = " << _case <<" et le mot  = "<<_word<<std::endl;
+      } while( board.spots[_case].letter != 0 );
+
+      _case = case_curr;
+      if( _word != ""){
+        _word += "+";
       }
-      //std::cout << "get_crosswords = " << _case <<" et le mot  = "<<_word<<std::endl;
-    } while( board.spots[_case].letter != 0 );
+      if(moves_available(_case, !orientation, true))
+        deplacement(!orientation, true, _case);
 
-    _case = case_curr;
-    if( _word != ""){
-      _word += "+";
-    }
-    if(moves_available(_case, !orientation, true))
-      deplacement(!orientation, true, _case);
+      while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
+        _word += board.spots[_case].letter;
+        deplacement(!orientation, true, _case);
+      }
 
-    while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
-      _word += board.spots[_case].letter;
-      deplacement(!orientation, true, _case);
-    }
-
-    if(lexicon.contains(_word)){
-      std::pair<unsigned int, std::string> p(case_curr, _word);
-      tab.push_back(p);
-    }
+      if(lexicon.contains(_word)){
+        std::pair<unsigned int, std::string> p(case_curr, _word);
+        tab.push_back(p);
+      }
+    }    
 
     deplacement(orientation, plus, case_curr);
   }
@@ -380,6 +383,16 @@ Coups Game::moves_list(std::string hand, unsigned int case_depart, bool orientat
   return meilleurCoup;
 }
 
+Coups Game::find_first_move(std::string hand){
+  Coups meilleurCoupV = moves_list(hand, 112, true);
+  Coups meilleurCoupH = moves_list(hand, 112, false);
+
+  if(meilleurCoupH.score > meilleurCoupV.score)
+    return meilleurCoupH;
+
+  return meilleurCoupV ;
+}
+
 Coups Game::find_best_move(std::string hand){
 
   Coups meilleurCoup(0, "", true, 0);
@@ -427,16 +440,20 @@ Coups Game::find_best_move(std::string hand){
     }
   }
 
-  meilleurCoup = tab_coups.at(0);
-  for(unsigned int i = 1; i < tab_coups.size(); i++){
-    if(meilleurCoup.score < tab_coups.at(i).score){
-      meilleurCoup = tab_coups.at(i);
-    } else if(meilleurCoup.score == tab_coups.at(i).score){
-      if(meilleurCoup.mot.size() > tab_coups.at(i).mot.size()){
+  std::cout << "tab_coups size = " << tab_coups.size() << std::endl;
+
+  if(tab_coups.size() > 0){
+    meilleurCoup = tab_coups.at(0);
+    for(unsigned int i = 1; i < tab_coups.size(); i++){
+      if(meilleurCoup.score < tab_coups.at(i).score){
         meilleurCoup = tab_coups.at(i);
+      } else if(meilleurCoup.score == tab_coups.at(i).score){
+        if(meilleurCoup.mot.size() > tab_coups.at(i).mot.size()){
+          meilleurCoup = tab_coups.at(i);
+        }
       }
     }
-  }
+  }  
 
   return meilleurCoup;
 }

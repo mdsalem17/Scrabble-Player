@@ -14,10 +14,6 @@ int main() {
 
   std::stringstream ss ;
 
-  std::string first_word = "BATEAU";
-  game.board.placeWord(ss, 1, 7, 7, first_word);
-  game.board.load(ss);
-
   std::cout << game.player.handToString() << std::endl;
 
   std::cout << game.board << std::endl;
@@ -25,14 +21,19 @@ int main() {
   bool playingGame = true;
   unsigned int compteur = 0;
   unsigned int tiles_used = 0;
-  while( (playingGame || game.player.handToString().size() > 0)){
+
+  Coups coup(0, "", true, 0);
+
+  while( playingGame || game.player.handToString().size() > 0 ){
     
     std::cout << "+++++++++++++++++++" << "iteration = "<< compteur<<"+++++++++++++++++++++" << std::endl;
 
-
     std::cout << game.player.handToString() << std::endl;
 
-    Coups coup = game.find_best_move(game.player.handToString());
+    if(compteur == 0)
+      coup = game.find_first_move(game.player.handToString());
+    else
+      coup = game.find_best_move(game.player.handToString());
 
     std::cout << "mot = " << coup.mot << ", score = " << coup.score <<" "<<std::endl;
     std::cout << "i = " << coup.spot/15 << ", j = " << coup.spot%15 <<" "<<std::endl;
