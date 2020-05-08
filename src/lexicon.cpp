@@ -63,7 +63,6 @@ void Node::display() {
             std::cout << ", ";
         std::cout << it2->first;
         if(isWord) std::cout<<"&";
-        //std::cout<<":" << it2->second;
     }
     std::cout <<"| ";
     }
@@ -94,7 +93,6 @@ std::vector<std::string> Lexicon::loadFromFile(){
 void Lexicon::addPlus(std::string word, std::vector<std::string>& array){
     for(unsigned int i=0; i < word.size(); i++){
         std::pair<std::string, std::string> p = splitString(word, i);
-        //std::cout<<"p.first : "<<p.first<<" p.second "<< p.second<<std::endl;
         array.push_back(reverseStr(p.first)+ "+" + p.second);
     }
 }

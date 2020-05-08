@@ -17,7 +17,6 @@ Player::Player(){
         char letter = bag.generateLetter();
         hand[letter-'A']++;
     }
-    std::cout << "\n";
 }
 
 std::string Player::handToString(){
@@ -54,16 +53,6 @@ bool Player::replaceLetters(std::string word){
 
         }
     }
-
-    for(unsigned int i = 0; i < ALPHA; i++){
-        char letters = 'A'+i;
-        std::cout << letters << " "; 
-    }
-    std::cout << std::endl;
-    for(unsigned int i = 0; i < ALPHA; i++){
-        std::cout << hand[i] << " ";
-    }
-    std::cout << std::endl;
 
     if(nbHandLetters > 0)
         return true;

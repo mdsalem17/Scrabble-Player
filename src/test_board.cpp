@@ -18,8 +18,6 @@ int main(int argc, char** argv)
   std::string txt_board = "";
   std::string txt_hand = "";
   
-  std::string suzette_hand;
-
   if(argc >= 2){
     if (!strcmp(argv[1], "--suzetteText")){
       if(argc >= 4){
@@ -120,7 +118,7 @@ int main(int argc, char** argv)
     game.adapt_word(coup.spot, coup.orientation, coup.mot);
 
     std::cout << "hand = " << txt_hand << std::endl;
-    std::cout << "mot = " << coup.mot << std::endl;
+    std::cout << "word = " << coup.mot << std::endl;
     std::cout << "score = " << coup.score <<std::endl;
 
     game.board.placeWord(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
@@ -134,52 +132,51 @@ int main(int argc, char** argv)
   //normal mode
   else{
 
-    std::cout << game.player.handToString() << std::endl;
-
     std::cout << game.board << std::endl;
   
     bool playingGame = true;
-    unsigned int compteur = 0;
-    unsigned int tiles_used = 0;
+    unsigned int iteration_counter = 0;
+    unsigned int used_tiles = 0;
 
     while( playingGame || game.player.handToString().size() > 0 ){
       
-      std::cout << "+++++++++++++++++++" << "iteration = "<< compteur<<"+++++++++++++++++++++" << std::endl;
+      if(iteration_counter <= 9)
+        std::cout << "_________________________" << " iteration = 0"<< iteration_counter<<" __________________________\n" << std::endl;
+      else
+        std::cout << "_________________________" << " iteration = "<< iteration_counter<<" __________________________\n" << std::endl;
 
-      std::cout << game.player.handToString() << std::endl;
+      std::cout << "hand = " << game.player.handToString() << std::endl;
 
-      if(compteur == 0)
+      if(iteration_counter == 0)
         coup = game.find_first_move(game.player.handToString());
       else
         coup = game.find_best_move(game.player.handToString());
 
-      std::cout << "mot = " << coup.mot << ", score = " << coup.score <<" "<<std::endl;
-      std::cout << "i = " << coup.spot/15 << ", j = " << coup.spot%15 <<" "<<std::endl;
+      std::string originalWord = coup.mot;
 
       game.score += coup.score;
 
-      std::cout << "nb hand tiles = " << game.player.getNbHandLetters() << std::endl;
-      std::cout << "nb bag tiles = " << game.player.bag.getNbLetters() << std::endl;
       game.adapt_word(coup.spot, coup.orientation, coup.mot);
 
-      std::cout << "--" << coup.mot << "--" << std::endl;
+      std::cout << "word = " << coup.mot << " ( " << originalWord << " )" << ", score = " << coup.score <<" "<<std::endl;
 
       game.board.placeWord(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
       game.board.load(ss);
 
-      tiles_used += coup.mot.size();
-      std::cout << "total calculated tiles used = " << tiles_used << std::endl ;
+      std::cout << "used letters = " << coup.mot << " ( " << coup.mot.size() << " letters ) " << std::endl;
+
+      used_tiles += coup.mot.size();
+      std::cout << "total used tiles = " << used_tiles << std::endl ;
 
       playingGame = game.player.replaceLetters(coup.mot);
       
-      std::cout << "playingGame = " << playingGame << std::endl;
-      std::cout << "score total = " << game.score << std::endl;
+      std::cout << "total score = " << game.score << std::endl;
 
       std::cout << game.board << std::endl;
       std::ofstream myfile;
-      std::string s_compteur = std::to_string(compteur);
+      std::string s_iteration_counter = std::to_string(iteration_counter);
       std::string file_name = "./boards/board";
-      file_name += s_compteur;
+      file_name += s_iteration_counter;
       file_name += ".txt";
       myfile.open (file_name);
       game.board.save(myfile, game.player.handToString());
@@ -191,7 +188,7 @@ int main(int argc, char** argv)
         std::this_thread::sleep_for(timespan);
       }
       
-      compteur++;
+      iteration_counter++;
     }
   }
   exit (0);

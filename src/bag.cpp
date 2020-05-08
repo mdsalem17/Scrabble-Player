@@ -9,10 +9,9 @@ Bag::Bag() {
     tabLetters = new char[TILES];
     nbLetters = TILES;
     initialize();
-    std::cout << "game starting with " << nbLetters << " tiles" << std::endl;
 }
 
-//fonction qui renvoie les points de la lettre passee par parametre
+//fonction qui renvoie les points de la lettre passee en parametre
 unsigned int Bag::getCharPoints(char _letter) const{
     unsigned int points = 0;
     switch (_letter){

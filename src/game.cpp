@@ -3,8 +3,8 @@
 
 Game::Game(){
     score = 0;
+    std::cout << "Loading dictionary..." << std::endl;
     lexicon.downloadLexicon();
-    std::cout << "lexicon downloaded" << std::endl;
 }
 
 static bool moves_available(unsigned int case_curr, bool orientation, bool plus){
@@ -74,7 +74,6 @@ void Game::adapt_word(unsigned int& case_depart, bool orientation, std::string& 
     i++;
   }
 
-  //std::cout<<"nouvelle case depart = "<<_case<<" et le mot = "<<word<<std::endl;
   case_depart = _case;
   mot = word;
 }
@@ -98,7 +97,6 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
     } else{
       break;
     }
-    //std::cout << "verify_crosswords = " << _case ;
   } while( board.spots[_case].letter != 0 );
 
   _case = case_curr;
@@ -145,7 +143,6 @@ std::vector<std::pair<unsigned int, std::string>> Game::get_crosswords(unsigned 
         } else{
           break;
         }
-        //std::cout << "get_crosswords = " << _case <<" et le mot  = "<<_word<<std::endl;
       } while( board.spots[_case].letter != 0 );
 
       _case = case_curr;
@@ -282,18 +279,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
       }
     }
   }  else{  
-		/**if( curr->suffixes.count(p) > 0 ) {
-			curr = curr->suffixes.at(p);
-      mot += p;
-			plus = true;
-			case_curr = case_depart;
-			
-      if(moves_available(case_curr, orientation, plus)){
-        deplacement(orientation, plus, case_curr);
-
-        moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
-      }
-    }**/ //else {
       std::string _mot = mot;
       std::string h_iterator = hand;
       unsigned int _case_curr = case_curr;
@@ -344,7 +329,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                     }
                   }
                 }
-                /**/
                 if(moves_available(case_curr, orientation, plus)){
                     deplacement(orientation, plus, case_curr);
 
@@ -439,8 +423,6 @@ Coups Game::find_best_move(std::string hand){
       }
     }
   }
-
-  std::cout << "tab_coups size = " << tab_coups.size() << std::endl;
 
   if(tab_coups.size() > 0){
     meilleurCoup = tab_coups.at(0);

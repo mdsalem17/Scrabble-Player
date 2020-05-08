@@ -132,7 +132,6 @@ void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int ini
   }
 
   word = word_final;
-  std::cout << "in placeWord, final word = " << word << std::endl;
 
   //stringstream
   std::string line = "";
