@@ -131,7 +131,7 @@ int main(int argc, char** argv)
   }
   //normal mode
   else{
-    system("exec rm -r ./boards/*");
+    system("exec rm -r ./data/boards/*");
 
     std::cout << game.board << std::endl;
   
@@ -176,7 +176,7 @@ int main(int argc, char** argv)
       std::cout << game.board << std::endl;
       std::ofstream myfile;
       std::string s_iteration_counter = std::to_string(iteration_counter);
-      std::string file_name = "./boards/board";
+      std::string file_name = "./data/boards/board";
       file_name += s_iteration_counter;
       file_name += ".txt";
       myfile.open (file_name);
