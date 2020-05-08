@@ -394,7 +394,9 @@ Coups Game::find_best_move(std::string hand){
         deplacement(true, false, j);
         if(board.spots[j].letter != 0){
           j = i;
-          tab_coups.push_back( moves_list(hand, j, true) );
+          Coups coup = moves_list(hand, j, true);
+          if(!coup.mot.empty())
+            tab_coups.push_back( coup );
         }
       }
       //Vertical avec plus
@@ -402,7 +404,9 @@ Coups Game::find_best_move(std::string hand){
         deplacement(true, true, k);
         if(board.spots[k].letter != 0){
           k = i;
-          tab_coups.push_back( moves_list(hand, k, true) );
+          Coups coup = moves_list(hand, k, true);
+          if(!coup.mot.empty())
+            tab_coups.push_back( coup );
         }
       }
       //Horizontal sans plus
@@ -410,7 +414,9 @@ Coups Game::find_best_move(std::string hand){
         deplacement(false, false, x);
         if(board.spots[x].letter != 0){
           x = i;
-          tab_coups.push_back( moves_list(hand, x, false) );
+          Coups coup = moves_list(hand, x, false);
+          if(!coup.mot.empty())
+            tab_coups.push_back( coup );
         }
       }
       //Horizontal avec plus
@@ -418,10 +424,16 @@ Coups Game::find_best_move(std::string hand){
         deplacement(false, true, y);
         if(board.spots[y].letter != 0){
           y = i;
-          tab_coups.push_back( moves_list(hand, y, false) );
+          Coups coup = moves_list(hand, y, false);
+          if(!coup.mot.empty())
+            tab_coups.push_back( coup );
         }
       }
     }
+  }
+
+  for(unsigned int i = 0; i < tab_coups.size(); i++){
+    std::cout << tab_coups.at(i).mot << std::endl;
   }
 
   if(tab_coups.size() > 0){

@@ -105,15 +105,22 @@ int main(int argc, char** argv)
   //suzette mode
   if(enable_suzette_file || enable_suzette_txt){
 
-    for(unsigned int i = 0; i < 255; i++){
-      if(!(txt_board[i] == '.')){
-        game.board.spots[i].letter = txt_board[i];
-      } 
+    bool empty_board = true;
+
+    for(unsigned int i = 0; i < 225; i++){
+      char c = txt_board[i];
+      if(c >= 'A' && c <= 'Z'){
+        game.board.spots[i].letter = c;
+        empty_board = false;
+      }
     }
 
     std::cout << game.board << std::endl;
 
-    coup = game.find_best_move(txt_hand);
+    if(empty_board)
+      coup = game.find_first_move(txt_hand);
+    else
+      coup = game.find_best_move(txt_hand);
 
     game.adapt_word(coup.spot, coup.orientation, coup.mot);
 
