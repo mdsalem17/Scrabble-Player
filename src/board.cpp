@@ -75,7 +75,6 @@ Board::Board() {
 //i/o to files
 void Board::save(std::ostream& out, std::string hand) {
   //write the grid of chars
-  out<< "suzette scrabble ";
   for(unsigned char i = 0; i < 225; ++i) {
     if(spots[i].letter) {
       //a letter is present, write it

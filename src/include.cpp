@@ -60,3 +60,68 @@ void remove_duplicate(std::string& s){
     }
          
 }
+
+bool is_board_valid(std::string& board){
+    if(board.size() == 225){
+        for(unsigned int i = 0; i < 225; i++){
+            if(!((board[i] >= 'A' && board[i] <= 'Z') || board[i] == '.'))
+                return false;
+        }
+    }else{
+        return false;
+    }
+
+    return true;
+}
+
+bool is_hand_valid(std::string& hand){
+    if(!hand.empty() && hand.size() <= 7){
+        for(unsigned int i = 0; i < hand.size(); i++){
+            if(!(hand[i] >= 'A' && hand[i] <= 'Z'))
+                return false;
+        }
+    }else{
+        return false;
+    }
+
+    return true;
+}
+
+bool store_file_to_string(const std::string& file_path, std::string& text){
+    std::ifstream in(file_path);
+    if (in) {
+        in.seekg(0, std::ios::end);
+        size_t len = in.tellg();
+        in.seekg(0);
+        std::string contents(len + 1, '\0');
+        in.read(&contents[0], len);
+        text = contents;
+
+    }else{
+        std::cout << "ERROR : cannot open file" << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+void split_string(const std::string& text, std::string& board, std::string& hand){
+    
+    board = "";
+    hand = "";
+    
+    bool reachedDelim = false;
+
+    for(unsigned int i = 0; i < text.size()-1; i++){
+        if(text[i] == ' '){
+            reachedDelim = true;
+            i++;
+        }
+        
+        if(!reachedDelim){
+            board += text[i];
+        }else{
+            hand += text[i];
+        }
+    }
+}
