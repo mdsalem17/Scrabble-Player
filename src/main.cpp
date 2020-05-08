@@ -131,6 +131,7 @@ int main(int argc, char** argv)
   }
   //normal mode
   else{
+    system("exec rm -r ./boards/*");
 
     std::cout << game.board << std::endl;
   
