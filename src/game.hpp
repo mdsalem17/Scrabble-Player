@@ -54,4 +54,6 @@ class Game{
                     std::string& mot, bool orientation, bool plus, Coups& meilleurCoup);    
         bool verify_crosswords(unsigned int case_curr, bool orientation, char c = ' ');
 
+        bool valid_neighbour(unsigned int case_curr );
+
 };
