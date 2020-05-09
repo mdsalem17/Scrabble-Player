@@ -230,7 +230,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
   char p = '+';
 
   if(board.spots[case_curr].letter != 0){
-
 		pcurr = board.spots[case_curr].letter;
     if( curr->suffixes.count(pcurr) > 0 ) {
       curr = curr->suffixes.at(pcurr);
@@ -242,7 +241,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
           deplacement(orientation, plus, next);
           if(board.spots[next].letter == 0){
             Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
-            std::cout << "mot = " << c.mot << std::endl;
+            std::cout << "(non vide ; coup mot) c.mot = " << c.mot << std::endl;
             if(c.score > meilleurCoup.score){
               meilleurCoup = c;
             } else if(c.score == meilleurCoup.score){
@@ -280,39 +279,42 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
         }
       }
     }
-  }  else{  
+  } else{
       std::string _mot = mot;
       std::string h_iterator = hand;
       unsigned int _case_curr = case_curr;
+      bool _plus = plus;
       remove_duplicate(h_iterator);
       if(!plus) h_iterator += "+";
       for(unsigned int i =0; i<h_iterator.size(); i++){
         Node* curr = n;
         pcurr = h_iterator[i];
         std::string h = hand;
-        if(pcurr != p) remove(pcurr, h);
+        /*if(pcurr != p)*/ remove(pcurr, h);
 
         if( curr->suffixes.count(pcurr) > 0 ) {
           if( pcurr == p ) {
             curr = curr->suffixes.at(p);
             mot += p;
-            unsigned int next = case_depart;
+            std::cout << "(lecture plus) mot = " << mot << std::endl;
+            case_curr = case_depart;
             plus = true;
-            if(moves_available(next, orientation, plus)){
-              deplacement(orientation, plus, next);
-              moves_list_rec(curr, hand, case_depart, next, mot, orientation, plus, meilleurCoup);
+            if(moves_available(case_curr, orientation, plus)){
+              deplacement(orientation, plus, case_curr);
+              moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
             }
-          }else{ 
+          }else{
             if(verify_crosswords(case_curr, orientation, pcurr)){
-              curr = curr->suffixes.at(pcurr);
-              mot += pcurr;
+            curr = curr->suffixes.at(pcurr);
+            mot += pcurr;
+            std::cout << "(nonn lecture plus) mot = " << mot << std::endl;
                 if(curr->isWord && mot.size() > 1) {
                   if(moves_available(case_curr, orientation, plus)){
                     unsigned int next = case_curr;
                     deplacement(orientation, plus, next);
                     if(board.spots[next].letter == 0){
                       Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
-                      std::cout << "mot = " << c.mot << std::endl;
+                      std::cout << "(coup mot) c.mot = " << c.mot << std::endl;
                       if(c.score > meilleurCoup.score){
                         meilleurCoup = c;
                       }else if(c.score == meilleurCoup.score){
@@ -343,9 +345,36 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                     mot += p;
                     plus = true;
                     case_curr = case_depart;
+                    
+                    if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+                      if(moves_available(case_curr, orientation, plus)){
+                        unsigned int next = case_curr;
+                        deplacement(orientation, plus, next);
+                        if(board.spots[next].letter == 0){
+                          Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
+                          std::cout << "(coup mot) c.mot = " << c.mot << std::endl;
+                          if(c.score > meilleurCoup.score){
+                            meilleurCoup = c;
+                          } else if(c.score == meilleurCoup.score){
+                            if(meilleurCoup.mot.size() > c.mot.size()){
+                              meilleurCoup = c;
+                            }
+                          }
+                        }
+                      } else {
+                        Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
+                        std::cout << "mot = " << c.mot << std::endl;
+                        if(c.score > meilleurCoup.score){
+                          meilleurCoup = c;
+                        }else if(c.score == meilleurCoup.score){
+                          if(meilleurCoup.mot.size() > c.mot.size()){
+                            meilleurCoup = c;
+                          }
+                        }
+                      }
+                    }
                     if(moves_available(case_curr, orientation, plus)){
                       deplacement(orientation, plus, case_curr);
-
                       moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
                     }
                   }   
@@ -353,6 +382,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
             }
           }
         }
+        plus = _plus;
         mot = _mot;
         case_curr = _case_curr;
       }
@@ -392,7 +422,7 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, true, false)){
       deplacement(true, false, j);
       if(board.spots[j].letter != 0){
-        std::cout << "verical sans plus" << std::endl;
+        //std::cout << "verical sans plus" << std::endl;
         return true;
       }
     }
@@ -400,7 +430,7 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, true, true)){
       deplacement(true, true, k);
       if(board.spots[k].letter != 0){
-        std::cout << "verical avec plus" << std::endl;
+        //std::cout << "verical avec plus" << std::endl;
         return true;
       }
     }
@@ -408,7 +438,7 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, false, false)){
       deplacement(false, false, x);
       if(board.spots[x].letter != 0){
-        std::cout << "horizontal sans plus" << std::endl;
+        //std::cout << "horizontal sans plus" << std::endl;
         return true;
       }
     }
@@ -416,7 +446,7 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, false, true)){
       deplacement(false, true, y);
       if(board.spots[y].letter != 0){
-        std::cout << "horizontal avec plus" << std::endl;
+        //std::cout << "horizontal avec plus" << std::endl;
         return true;
       }
     }
@@ -430,25 +460,27 @@ Coups Game::find_best_move(std::string hand){
   
   std::vector<Coups> tab_coups;
 
-  //for(unsigned int i = 0; i < 225; i++){
-    unsigned int i = 1;
+  //
+  for(unsigned int i = 0; i < 225; i++){
+  //unsigned int i = 121;
     if(valid_neighbour(i)){
       //Vertical
-      std::cout << "vertical2" << std::endl;
+      //std::cout << "vertical2" << std::endl;
       Coups coup1 = moves_list(hand, i, true);
       if(!coup1.mot.empty()){
         tab_coups.push_back( coup1 );
       }
       
       //Horizontal
-      std::cout << "horizontal2" << std::endl;
+      //std::cout << "horizontal2" << std::endl;
       Coups coup2 = moves_list(hand, i, false);
       if(!coup2.mot.empty()){
         tab_coups.push_back( coup2 );
       }
           
     }
-  //}
+  //
+  }
 
   std::cout << "tab_coups.size() = " << tab_coups.size() << std::endl;
 
