@@ -130,11 +130,12 @@ int main(int argc, char** argv)
 
     game.board.placeWord(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
     game.board.load(ss);
+  
+
 
     std::cout << "used letters = " << coup.mot << " ( " << coup.mot.size() << " letters ) " << std::endl;
 
     std::cout << game.board << std::endl;
-
   }
   //normal mode
   else{

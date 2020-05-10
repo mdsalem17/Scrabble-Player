@@ -43,17 +43,16 @@ class Game{
         ~Game();
         Coups find_first_move(std::string hand);
         Coups find_best_move(std::string hand);
-        Coups moves_list(std::string hand, unsigned int case_depart, bool orientation);
-        std::vector<std::pair<unsigned int, std::string>> get_crosswords(unsigned int case_depart, std::string word, bool orientation);
-        unsigned int word_score(unsigned int case_depart, std::string word, bool orientation);
-        unsigned int play_score(unsigned int case_depart, std::string word, bool orientation, bool empty);
         void adapt_word(unsigned int& case_depart, bool orientation, std::string& mot);
 
     private:
+        std::vector<std::pair<unsigned int, std::string>> get_crosswords(unsigned int case_depart, std::string word, bool orientation);
+        unsigned int word_score(unsigned int case_depart, std::string word, bool orientation);
+        unsigned int play_score(unsigned int case_depart, std::string word, bool orientation, bool empty);
         void moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
-                    std::string& mot, bool orientation, bool plus, Coups& meilleurCoup);    
+                    std::string& mot, bool orientation, bool plus, Coups& meilleurCoup);
+        Coups moves_list(std::string hand, unsigned int case_depart, bool orientation);
         bool verify_crosswords(unsigned int case_curr, bool orientation, char c = ' ');
-
         bool valid_neighbour(unsigned int case_curr );
 
 };
