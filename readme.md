@@ -1,5 +1,7 @@
 # Projet Scrabble
 
+Lien vers le [dépôt sur Gitlab](https://forge.univ-lyon1.fr/p1714033/scrabble-etu.git)
+
 ### Réalisé par 
 * ABDRABO Khaled		- p1713323 
 * MESSOUD Salem			- p1714033

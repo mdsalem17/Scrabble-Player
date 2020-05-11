@@ -19,7 +19,7 @@ int main(int argc, char** argv)
   std::string txt_hand = "";
   
   if(argc >= 2){
-    if (!strcmp(argv[1], "--suzetteText")){
+    if (!strcmp(argv[1], "--suzette-text")){
       if(argc >= 4){
         std::string str_board(argv[2]);
         txt_board = str_board;
@@ -39,10 +39,10 @@ int main(int argc, char** argv)
         std::cout << "\nin SuzetteText option" << std::endl;
         enable_suzette_txt = true;
       }else{
-        std::cerr << "\nERROR: need arguments: --suzetteText [board] [hand]\nFor help, use option --help\n" << std::endl;
+        std::cerr << "\nERROR: need arguments: --suzette-text [board] [hand]\nFor help, use option --help\n" << std::endl;
         exit (1);
       }
-    }else if (!strcmp(argv[1], "--suzetteFile")){
+    }else if (!strcmp(argv[1], "--suzette-file")){
       if(argc >= 3){
         std::string str_file;
         std::string filepath(argv[2]);
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
         std::cout << "\nin SuzetteFile option" << std::endl;
         enable_suzette_file = true;
       }else{
-        std::cerr << "\nERROR: need arguments: --suzetteFile [file_name]\nFor help, use option --help\n" << std::endl;
+        std::cerr << "\nERROR: need arguments: --suzette-file [file_name]\nFor help, use option --help\n" << std::endl;
         exit (1);
       }
     }else if (!strcmp(argv[1], "--slow")) {
@@ -78,8 +78,8 @@ int main(int argc, char** argv)
                 << "Options* :\n"
                 << "----------\n"
                 << "--slow [number_of_seconds: optional]\n"
-                << "--suzetteText [board] [hand]\n"
-                << "--suzetteFile [file_name]\n"
+                << "--suzette-text [board] [hand]\n"
+                << "--suzette-file [file_name]\n"
                 << "* You can use only one option at a time\n\n"
                 << "Formats : \n"
                 << "---------\n"
@@ -115,6 +115,8 @@ int main(int argc, char** argv)
       }
     }
 
+    game.player.setNbHandLetters(txt_hand.size());
+
     std::cout << game.board << std::endl;
 
     if(empty_board)
@@ -130,8 +132,6 @@ int main(int argc, char** argv)
 
     game.board.placeWord(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
     game.board.load(ss);
-  
-
 
     std::cout << "used letters = " << coup.mot << " ( " << coup.mot.size() << " letters ) " << std::endl;
 

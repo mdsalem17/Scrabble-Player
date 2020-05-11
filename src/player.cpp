@@ -64,6 +64,10 @@ unsigned int Player::getNbHandLetters(){
     return nbHandLetters;
 }
 
+void Player::setNbHandLetters(unsigned int nb_letters){
+    nbHandLetters = nb_letters;
+}
+
 Player::~Player(){
 
 }

@@ -288,7 +288,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
     }
   } else{
     // la case est donc vide 
-
+    
       std::string _mot = mot;
       std::string h_iterator = hand;
       unsigned int _case_curr = case_curr;
@@ -458,7 +458,6 @@ Coups Game::find_best_move(std::string hand){
   std::vector<Coups> tab_coups;
 
   for(unsigned int i = 0; i < 225; i++){
-  //unsigned int i = 121;
     if(valid_neighbour(i)){
       //Vertical
       Coups coup1 = moves_list(hand, i, true);
@@ -474,12 +473,12 @@ Coups Game::find_best_move(std::string hand){
           
     }
   }
-
+  /* Pour voir tous les meilleurs coups trouves (selon la case courante)
   std::cout << "tab_coups.size() = " << tab_coups.size() << std::endl;
 
   for(unsigned int i = 0; i < tab_coups.size(); i++){
     std::cout << tab_coups.at(i).mot << std::endl;
-  }
+  }*/
 
   if(tab_coups.size() > 0){
     meilleurCoup = tab_coups.at(0);

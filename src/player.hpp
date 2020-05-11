@@ -10,6 +10,7 @@ class Player{
         Player();
         ~Player();
         unsigned int getNbHandLetters();
+        void setNbHandLetters(unsigned int nb_letters);
         bool replaceLetters(std::string word);
         std::string handToString();
 
