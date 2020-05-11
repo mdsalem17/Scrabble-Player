@@ -89,6 +89,8 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
     word +=board.spots[_case].letter;
   }
 
+  // On obtient toutes les lettres du mot avant "+" en suivant le sens inverse 
+  // de la lecture
   do{
     if( moves_available(_case, !orientation, false) ){
       deplacement(!orientation, false, _case);
@@ -99,11 +101,13 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
     }
   } while( board.spots[_case].letter != 0 );
 
+  // on ajoute le plus et on retourne à la case depart
   if( word != ""){
     word += "+";
   }
   _case = case_curr;
 
+  // On obtient toutes les lettres du mot après "+" en suivant le sens de la lecture
   do{
     if(moves_available(_case, !orientation, true)){
       deplacement(!orientation, true, _case);
@@ -124,6 +128,7 @@ std::vector<std::pair<unsigned int, std::string>> Game::get_crosswords(unsigned 
   bool plus = false;
   for(unsigned int i = 0; i < word.size(); i++ ){
 
+    // On utilise le même principe que dans la méthode verify_crosswords
     if(word[i] == '+'){
       plus = true;
       case_curr = case_depart;
@@ -250,13 +255,22 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
   char p = '+';
   //char joker = '?';
 
+
+  // Lorsque la case est occupée, il faut utiliser la lettre présente sur la case.
+  // On met à jour le curseur  dans la lexicon, on suivant l'arête de la lettre lue
+  // Puis on ajoute la lettre au mot, et on vérifie que l'arête est bien un mot
+  // Si c'est le cas, alors c'est coup potentiel. Si le score est meilleur que le
+  // coup courant, on change le meilleur coup
   if(board.spots[case_curr].letter != 0){
 		pcurr = board.spots[case_curr].letter;
     if( curr->suffixes.count(pcurr) > 0 ) {
       curr = curr->suffixes.at(pcurr);
       mot += pcurr;
       
+      // Il faut bien vérifie qu'on a utilisé au moins une lettre de la main du joueur
       if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+        // Il faut bien vérifier que la case suivante est vide pour éviter des collisions
+        // entre les mots et de générer des mots non valides  
         if(moves_available(case_curr, orientation, plus)){
           unsigned int next = case_curr;
           deplacement(orientation, plus, next);
@@ -265,30 +279,52 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
             meilleurCoup = compare_moves(c, meilleurCoup);
           }
         } else {
+          // S'il n'y a pas de mouvements, ça veut dire qu'on est au bord du plateau. On peut
+          // donc ajouter le mot comme étant coup potentiel 
           Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
           meilleurCoup = compare_moves(c, meilleurCoup);
         }
       }
       
+      // On se déplace sur le plateau, en utilisant le nouveau curseur dans le lexicon
       if(moves_available(case_curr, orientation, plus)){
         deplacement(orientation, plus, case_curr);
         moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
       } else {
+        // Si aucun mouvement n'est possible alors on essaie de lire le "+". Il faut donc retourner
+        // à la case depart, et avancer dans le sens de la lecture
         if( curr->suffixes.count(p) > 0 ) {
           curr = curr->suffixes.at(p);
           mot += p;
-          bool plus_ = true;
+          bool _plus = true;
           case_curr = case_depart;
-              
-          if(moves_available(case_curr, orientation, plus_)){
-            deplacement(orientation, plus_, case_curr);
-            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus_, meilleurCoup);
+ /*         
+          if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+            if(moves_available(case_curr, orientation, _plus)){
+              unsigned int next = case_curr;
+              deplacement(orientation, _plus, next);
+              if(board.spots[next].letter == 0){
+                Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
+                meilleurCoup = compare_moves(c, meilleurCoup);
+              }
+            } else {
+              Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
+              meilleurCoup = compare_moves(c, meilleurCoup);
+            }
+          }
+*/
+          if(moves_available(case_curr, orientation, _plus)){
+            deplacement(orientation, _plus, case_curr);
+            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, _plus, meilleurCoup);
           }
         }
       }
     }
   } else{
-    // la case est donc vide 
+    // La case est donc vide. Il faut essayer d'utiliser chaque lettre présente dans la main
+    // du joueur. Pour cela, on supprimer les lettres rédondantes, pour éviter de générer le même
+    // plusieurs fois. Il faut ajouter le "+" dans la mai du joueur s'il y'est pas/
+    // Si on utilise une lettre, on avance dans le lexicon, et on la supprime de la main/ 
     
     std::string _mot = mot;
     std::string h_iterator = hand;
@@ -299,19 +335,37 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
       Node* curr = n;
       pcurr = h_iterator[i];
       std::string h = hand;
-      /*if(pcurr != p)*/ remove(pcurr, h);
+      if(pcurr != p) remove(pcurr, h);
 
       if( curr->suffixes.count(pcurr) > 0 ) {
+        // On avance dans le gaddag, on distingue le cas où on lit le "+" et une lettre 
         if( pcurr == p ) {
           curr = curr->suffixes.at(p);
           mot += p;
           case_curr = case_depart;
-          bool plus_ = true;
-          if(moves_available(case_curr, orientation, plus_)){
-            deplacement(orientation, plus_, case_curr);
-            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus_, meilleurCoup);
+          bool _plus = true;
+/*
+          if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+            if(moves_available(case_curr, orientation, _plus)){
+              unsigned int next = case_curr;
+              deplacement(orientation, _plus, next);
+              if(board.spots[next].letter == 0){
+                Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
+                meilleurCoup = compare_moves(c, meilleurCoup);
+              }
+            } else {
+              Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
+              meilleurCoup = compare_moves(c, meilleurCoup);
+            }
+          }
+ */         
+          if(moves_available(case_curr, orientation, _plus)){
+            deplacement(orientation, _plus, case_curr);
+            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, _plus, meilleurCoup);
           }
         }else{
+          // Avant d'utiliser une lettre, il faut bien vérifier que cette lettre ne génére pas des
+          // mots croisés invalides 
           if(verify_crosswords(case_curr, orientation, pcurr)){
             curr = curr->suffixes.at(pcurr);
             mot += pcurr;
@@ -332,6 +386,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                 deplacement(orientation, plus, case_curr);
                 moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
             } else{
+              // Comme aucun movement est possible, on essaie de lire le "+"
               if( curr->suffixes.count(p) > 0 ) {
                 curr = curr->suffixes.at(p);
                 mot += p;
@@ -351,6 +406,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                     meilleurCoup = compare_moves(c, meilleurCoup);
                   }
                 }
+                
                 if(moves_available(case_curr, orientation, _plus)){
                   deplacement(orientation, _plus, case_curr);
                   moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, _plus, meilleurCoup);
@@ -367,7 +423,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 }
 
 Coups Game::moves_list(std::string hand, unsigned int case_depart, bool orientation){
- 
   bool plus = false;
   unsigned int case_curr = case_depart;
   std::string mot = "";
@@ -395,28 +450,27 @@ bool Game::valid_neighbour(unsigned int case_curr){
   unsigned int y = case_curr;
   
   if(board.spots[case_curr].letter == 0){
-    //Vertical sans plus
     if(moves_available(case_curr, true, false)){
       deplacement(true, false, j);
       if(board.spots[j].letter != 0){
         return true;
       }
     }
-    //Vertical avec plus
+
     if(moves_available(case_curr, true, true)){
       deplacement(true, true, k);
       if(board.spots[k].letter != 0){
         return true;
       }
     }
-    //Horizontal sans plus
+
     if(moves_available(case_curr, false, false)){
       deplacement(false, false, x);
       if(board.spots[x].letter != 0){
         return true;
       }
     }
-    //Horizontal avec plus
+
     if(moves_available(case_curr, false, true)){
       deplacement(false, true, y);
       if(board.spots[y].letter != 0){
@@ -424,6 +478,7 @@ bool Game::valid_neighbour(unsigned int case_curr){
       }
     }
   }
+
   return false;
 }
 
@@ -449,12 +504,14 @@ Coups Game::find_best_move(std::string hand){
           
     }
   }
-  /* Pour voir tous les meilleurs coups trouves (selon la case courante)
-  std::cout << "tab_coups.size() = " << tab_coups.size() << std::endl;
 
+  // Pour voir tous les meilleurs coups trouveé (selon la case courante) décommenter
+  /*
+  std::cout << "tab_coups.size() = " << tab_coups.size() << std::endl;
   for(unsigned int i = 0; i < tab_coups.size(); i++){
     std::cout << tab_coups.at(i).mot << std::endl;
-  }*/
+  }
+  */
 
   if(tab_coups.size() > 0){
     meilleurCoup = tab_coups.at(0);

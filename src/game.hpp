@@ -9,6 +9,11 @@
 
 struct Coups{
 
+    unsigned int spot;
+    std::string mot;
+    bool orientation;
+    unsigned int score;
+
     Coups(unsigned int _spot, std::string _mot, bool _orient, unsigned int _score){
         spot = _spot;
         mot = _mot;
@@ -23,22 +28,11 @@ struct Coups{
         score = c.score;
         return *this;
     }
-
-    unsigned int spot;
-    std::string mot;
-    bool orientation;
-    unsigned int score;
 };
 
 class Game{
 
     public:
-        Board board;
-        Player player;
-        Lexicon lexicon;
-
-        unsigned int score;
-
         Game();
         ~Game();
 
@@ -53,6 +47,11 @@ class Game{
         // "adapt_word" modifie la case de depart et le mot pour permettre de placer
         // le mot sans le plus bien structuré à la bonne place  
         void adapt_word(unsigned int& case_depart, bool orientation, std::string& mot);
+
+        Board board;
+        Player player;
+        Lexicon lexicon;
+        unsigned int score;
 
     private:
         // "compare_moves" renvoie le meilleur coup parmi le nouveau et le meilleur
@@ -72,7 +71,8 @@ class Game{
         // selon l'orientation 
         unsigned int word_score(unsigned int case_depart, std::string word, bool orientation);
         
-        // "play_score" permet de calculer le score total de tous les mots créés du coup 
+        // "play_score" permet de calculer le score total de tous les mots créés du coup
+        // Elle s'appuie "word_score"
         unsigned int play_score(unsigned int case_depart, std::string word, bool orientation, bool empty);
         
         // "moves_list_rec" récursive sur le noeud du lexicon. Elle renvoie les coups

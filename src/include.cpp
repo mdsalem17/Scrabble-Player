@@ -1,6 +1,6 @@
 #include "include.hpp"
 
-std::pair<std::string, std::string> splitString(std::string word, unsigned int position){
+std::pair<std::string, std::string> split_string(std::string word, unsigned int position){
     if(position > word.size()){
         std::cout<<"Position too big"<<std::endl;
         exit(EXIT_FAILURE);
@@ -65,7 +65,6 @@ bool is_board_valid(std::string& board){
     }else{
         return false;
     }
-
     return true;
 }
 
@@ -100,11 +99,9 @@ bool store_file_to_string(const std::string& file_path, std::string& text){
     return true;
 }
 
-void extract_board_hand(const std::string& text, std::string& board, std::string& hand){
-    
+void extract_board_hand(const std::string& text, std::string& board, std::string& hand){ 
     board = "";
     hand = "";
-    
     bool reachedDelim = false;
 
     for(unsigned int i = 0; i < text.size()-1; i++){

@@ -73,7 +73,7 @@ std::vector<std::string> Lexicon::load_from_file(){
 
 static void add_plus(std::string word, std::vector<std::string>& array){
     for(unsigned int i=0; i < word.size(); i++){
-        std::pair<std::string, std::string> p = splitString(word, i);
+        std::pair<std::string, std::string> p = split_string(word, i);
         array.push_back(reverse_str(p.first)+ "+" + p.second);
     }
 }
