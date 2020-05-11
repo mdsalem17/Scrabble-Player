@@ -57,7 +57,7 @@ int main(int argc, char** argv)
         std::string filepath(argv[2]);
         bool openedFile = store_file_to_string(filepath, str_file);
         if(!openedFile) exit(1);
-        split_string(str_file, txt_board, txt_hand);
+        extract_board_hand(str_file, txt_board, txt_hand);
 
         if( !is_board_valid(txt_board) ){
           std::cerr << "\nThe given board does not match the requested format!\nFor help, use option --help\n" << std::endl;

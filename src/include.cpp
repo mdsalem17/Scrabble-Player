@@ -100,7 +100,7 @@ bool store_file_to_string(const std::string& file_path, std::string& text){
     return true;
 }
 
-void split_string(const std::string& text, std::string& board, std::string& hand){
+void extract_board_hand(const std::string& text, std::string& board, std::string& hand){
     
     board = "";
     hand = "";
