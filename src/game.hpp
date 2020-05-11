@@ -46,6 +46,7 @@ class Game{
         void adapt_word(unsigned int& case_depart, bool orientation, std::string& mot);
 
     private:
+        Coups compare_moves(Coups coup, Coups meilleurCoup);
         std::vector<std::pair<unsigned int, std::string>> get_crosswords(unsigned int case_depart, std::string word, bool orientation);
         unsigned int word_score(unsigned int case_depart, std::string word, bool orientation);
         unsigned int play_score(unsigned int case_depart, std::string word, bool orientation, bool empty);

@@ -229,13 +229,26 @@ unsigned int Game::play_score(unsigned int case_depart, std::string word, bool o
   return _score + bingo;
 }
 
+Coups Game::compare_moves(Coups coup, Coups meilleurCoup){
+
+  if(coup.score > meilleurCoup.score){
+    return coup;
+  } else if(coup.score == meilleurCoup.score){
+    if(meilleurCoup.mot.size() > coup.mot.size()){
+      return coup;
+    }
+  }
+
+  return meilleurCoup;
+}
+
 void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, unsigned int &case_curr,
           std::string& mot, bool orientation, bool plus, Coups& meilleurCoup){
 
 	char pcurr;
   Node* curr = n;
   char p = '+';
-  char joker = '?';
+  //char joker = '?';
 
   if(board.spots[case_curr].letter != 0){
 		pcurr = board.spots[case_curr].letter;
@@ -249,30 +262,18 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
           deplacement(orientation, plus, next);
           if(board.spots[next].letter == 0){
             Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
-            if(c.score > meilleurCoup.score){
-              meilleurCoup = c;
-            } else if(c.score == meilleurCoup.score){
-              if(meilleurCoup.mot.size() > c.mot.size()){
-                meilleurCoup = c;
-              }
-            }
+            meilleurCoup = compare_moves(c, meilleurCoup);
           }
         } else {
           Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
-          if(c.score > meilleurCoup.score){
-            meilleurCoup = c;
-          } else if(c.score == meilleurCoup.score){
-            if(meilleurCoup.mot.size() > c.mot.size()){
-              meilleurCoup = c;
-            }
-          }
+          meilleurCoup = compare_moves(c, meilleurCoup);
         }
       }
       
       if(moves_available(case_curr, orientation, plus)){
         deplacement(orientation, plus, case_curr);
         moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
-      }  else{
+      } else {
         if( curr->suffixes.count(p) > 0 ) {
           curr = curr->suffixes.at(p);
           mot += p;
@@ -289,104 +290,79 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
   } else{
     // la case est donc vide 
     
-      std::string _mot = mot;
-      std::string h_iterator = hand;
-      unsigned int _case_curr = case_curr;
-      remove_duplicate(h_iterator);
-      if(!plus) h_iterator += "+";
-      for(unsigned int i =0; i<h_iterator.size(); i++){
-        Node* curr = n;
-        pcurr = h_iterator[i];
-        std::string h = hand;
-        /*if(pcurr != p)*/ remove(pcurr, h);
+    std::string _mot = mot;
+    std::string h_iterator = hand;
+    unsigned int _case_curr = case_curr;
+    remove_duplicate(h_iterator);
+    if(!plus) h_iterator += "+";
+    for(unsigned int i =0; i<h_iterator.size(); i++){
+      Node* curr = n;
+      pcurr = h_iterator[i];
+      std::string h = hand;
+      /*if(pcurr != p)*/ remove(pcurr, h);
 
-        if( curr->suffixes.count(pcurr) > 0 ) {
-          if( pcurr == p ) {
-            curr = curr->suffixes.at(p);
-            mot += p;
-            case_curr = case_depart;
-            bool plus_ = true;
-            if(moves_available(case_curr, orientation, plus_)){
-              deplacement(orientation, plus_, case_curr);
-              moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus_, meilleurCoup);
-            }
-          }else{
-            if(verify_crosswords(case_curr, orientation, pcurr)){
+      if( curr->suffixes.count(pcurr) > 0 ) {
+        if( pcurr == p ) {
+          curr = curr->suffixes.at(p);
+          mot += p;
+          case_curr = case_depart;
+          bool plus_ = true;
+          if(moves_available(case_curr, orientation, plus_)){
+            deplacement(orientation, plus_, case_curr);
+            moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, plus_, meilleurCoup);
+          }
+        }else{
+          if(verify_crosswords(case_curr, orientation, pcurr)){
             curr = curr->suffixes.at(pcurr);
             mot += pcurr;
-                if(curr->isWord && mot.size() > 1) {
-                  if(moves_available(case_curr, orientation, plus)){
+            if(curr->isWord && mot.size() > 1) {
+              if(moves_available(case_curr, orientation, plus)){
+                unsigned int next = case_curr;
+                deplacement(orientation, plus, next);
+                if(board.spots[next].letter == 0){
+                  Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
+                  meilleurCoup = compare_moves(c, meilleurCoup);
+                }
+              } else {
+                Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
+                meilleurCoup = compare_moves(c, meilleurCoup);
+              }
+            }
+            if(moves_available(case_curr, orientation, plus)){
+                deplacement(orientation, plus, case_curr);
+                moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
+            } else{
+              if( curr->suffixes.count(p) > 0 ) {
+                curr = curr->suffixes.at(p);
+                mot += p;
+                bool _plus = true;
+                case_curr = case_depart;
+                
+                if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+                  if(moves_available(case_curr, orientation, _plus)){
                     unsigned int next = case_curr;
-                    deplacement(orientation, plus, next);
+                    deplacement(orientation, _plus, next);
                     if(board.spots[next].letter == 0){
-                      Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
-                      if(c.score > meilleurCoup.score){
-                        meilleurCoup = c;
-                      }else if(c.score == meilleurCoup.score){
-                        if(meilleurCoup.mot.size() > c.mot.size()){
-                          meilleurCoup = c;
-                        }
-                      }
+                      Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
+                      meilleurCoup = compare_moves(c, meilleurCoup);
                     }
                   } else {
                     Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
-                    if(c.score > meilleurCoup.score){
-                      meilleurCoup = c;
-                    }else if(c.score == meilleurCoup.score){
-                      if(meilleurCoup.mot.size() > c.mot.size()){
-                        meilleurCoup = c;
-                      }
-                    }
+                    meilleurCoup = compare_moves(c, meilleurCoup);
                   }
                 }
-                if(moves_available(case_curr, orientation, plus)){
-                    deplacement(orientation, plus, case_curr);
-
-                    moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, plus, meilleurCoup);
-                } else{
-                  if( curr->suffixes.count(p) > 0 ) {
-                    curr = curr->suffixes.at(p);
-                    mot += p;
-                    bool _plus = true;
-                    case_curr = case_depart;
-                    
-                    if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
-                      if(moves_available(case_curr, orientation, _plus)){
-                        unsigned int next = case_curr;
-                        deplacement(orientation, _plus, next);
-                        if(board.spots[next].letter == 0){
-                          Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
-                          if(c.score > meilleurCoup.score){
-                            meilleurCoup = c;
-                          } else if(c.score == meilleurCoup.score){
-                            if(meilleurCoup.mot.size() > c.mot.size()){
-                              meilleurCoup = c;
-                            }
-                          }
-                        }
-                      } else {
-                        Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
-                        if(c.score > meilleurCoup.score){
-                          meilleurCoup = c;
-                        }else if(c.score == meilleurCoup.score){
-                          if(meilleurCoup.mot.size() > c.mot.size()){
-                            meilleurCoup = c;
-                          }
-                        }
-                      }
-                    }
-                    if(moves_available(case_curr, orientation, _plus)){
-                      deplacement(orientation, _plus, case_curr);
-                      moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, _plus, meilleurCoup);
-                    }
-                  }   
+                if(moves_available(case_curr, orientation, _plus)){
+                  deplacement(orientation, _plus, case_curr);
+                  moves_list_rec(curr, h, case_depart, case_curr, mot, orientation, _plus, meilleurCoup);
                 }
+              }   
             }
           }
         }
-        mot = _mot;
-        case_curr = _case_curr;
       }
+      mot = _mot;
+      case_curr = _case_curr;
+    }
   }
 }
 
@@ -483,13 +459,7 @@ Coups Game::find_best_move(std::string hand){
   if(tab_coups.size() > 0){
     meilleurCoup = tab_coups.at(0);
     for(unsigned int i = 1; i < tab_coups.size(); i++){
-      if(meilleurCoup.score < tab_coups.at(i).score){
-        meilleurCoup = tab_coups.at(i);
-      } else if(meilleurCoup.score == tab_coups.at(i).score){
-        if(meilleurCoup.mot.size() > tab_coups.at(i).mot.size()){
-          meilleurCoup = tab_coups.at(i);
-        }
-      }
+      meilleurCoup = compare_moves(tab_coups.at(i), meilleurCoup);
     }
   }  
 
