@@ -17,6 +17,15 @@ int main(int argc, char** argv)
   bool enable_suzette_file = false;
   std::string txt_board = "";
   std::string txt_hand = "";
+
+  bool enable_suzette_case_depart = false;
+  unsigned int suzette_case_depart = 0;
+
+  bool enable_suzette_orientation = false;
+  bool suzette_orientation = true;
+
+  bool enable_suzette_plus = false;
+  bool suzette_plus = false;
   
   if(argc >= 2){
     if (!strcmp(argv[1], "--suzette-text")){
@@ -61,6 +70,44 @@ int main(int argc, char** argv)
         
         std::cout << "\nin SuzetteFile option" << std::endl;
         enable_suzette_file = true;
+
+        for(unsigned int i = 3; i < (unsigned int) argc; i++){
+          if(!strcmp(argv[i], "-vertical") || !strcmp(argv[i], "-v")){
+            enable_suzette_orientation = true;
+            suzette_orientation = true;
+          }else if(!strcmp(argv[i], "-horizontal") || !strcmp(argv[i], "-h")){
+            enable_suzette_orientation = true;
+            suzette_orientation = false;
+          }else if(!strcmp(argv[i], "-plus") || !strcmp(argv[i], "-p")){
+            enable_suzette_plus = true;
+            suzette_plus = true;
+          }else if(!strcmp(argv[i], "-case") || !strcmp(argv[i], "-c")){
+            if((unsigned)argc > i + 1 && !(atoi(argv[i]) > 225 )){ ///////////verify argv[i] is int not string, and if string exit(1)
+              enable_suzette_case_depart = true;
+              i++;
+              suzette_case_depart = atoi(argv[i]);
+              if(suzette_case_depart > 225){
+                std::cerr << "Case needs to be a value betwen [0, 225]" << std::endl;
+                exit(1);
+              }
+            }else{
+              std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
+              exit(1);
+            }
+          }else{
+            std::cerr << "\nERROR: unknown option\nFor help, use option --help" << std::endl;
+            exit(1);
+          }
+          
+        }
+        std::cout << "suzette_case_depart = " << suzette_case_depart << std::endl;
+
+        std::cout << "\nenable_suzette_file = " << enable_suzette_file << std::endl;
+        std::cout << "enable_suzette_orientation = " << enable_suzette_orientation << ", orientation value = " <<  suzette_orientation << std::endl;
+        std::cout << "enable_suzette_plus = " << enable_suzette_plus << ", plus value = " << suzette_plus << std::endl;
+        std::cout << "enable_suzette_case_depart = " << enable_suzette_case_depart << ", case value = " << suzette_case_depart << std::endl;
+        exit(1);
+
       }else{
         std::cerr << "\nERROR: need arguments: --suzette-file [file_name]\nFor help, use option --help\n" << std::endl;
         exit (1);
