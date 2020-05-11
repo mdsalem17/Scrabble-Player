@@ -103,7 +103,6 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
     word += "+";
   }
   _case = case_curr;
-  //std::cout << "(verify_crosswords; before after plus) word = " << word << std::endl;
 
   do{
     if(moves_available(_case, !orientation, true)){
@@ -115,7 +114,6 @@ bool Game::verify_crosswords(unsigned int case_curr, bool orientation,  char c){
     }
   }while( board.spots[_case].letter != 0 );
 
-  //std::cout << "(verify_crosswords; before return) word = " << word << std::endl;
   
   return (word.size() == 2 && word[1] == '+') || word.empty() || lexicon.contains(word);
 }
@@ -155,19 +153,22 @@ std::vector<std::pair<unsigned int, std::string>> Game::get_crosswords(unsigned 
       if( _word != ""){
         _word += "+";
       }
-      if(moves_available(_case, !orientation, true))
-        deplacement(!orientation, true, _case);
 
-      while( board.spots[_case].letter != 0 && moves_available(_case, !orientation, true)){
-        _word += board.spots[_case].letter;
-        deplacement(!orientation, true, _case);
-      }
+      do{
+        if(moves_available(_case, !orientation, true)){
+          deplacement(!orientation, true, _case);
+          if( board.spots[_case].letter != 0)
+            _word += board.spots[_case].letter;
+        }else {
+          break;
+        }
+      } while( board.spots[_case].letter != 0);
 
       if(lexicon.contains(_word)){
         std::pair<unsigned int, std::string> p(case_curr, _word);
         tab.push_back(p);
       }
-    }    
+    }
 
     deplacement(orientation, plus, case_curr);
   }
@@ -234,6 +235,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
 	char pcurr;
   Node* curr = n;
   char p = '+';
+  char joker = '?';
 
   if(board.spots[case_curr].letter != 0){
 		pcurr = board.spots[case_curr].letter;
@@ -302,7 +304,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
           if( pcurr == p ) {
             curr = curr->suffixes.at(p);
             mot += p;
-            //std::cout << "(lecture plus) mot = " << mot << std::endl;
             case_curr = case_depart;
             bool plus_ = true;
             if(moves_available(case_curr, orientation, plus_)){
@@ -313,14 +314,12 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
             if(verify_crosswords(case_curr, orientation, pcurr)){
             curr = curr->suffixes.at(pcurr);
             mot += pcurr;
-            //std::cout << "(nonn lecture plus) mot = " << mot << std::endl;
                 if(curr->isWord && mot.size() > 1) {
                   if(moves_available(case_curr, orientation, plus)){
                     unsigned int next = case_curr;
                     deplacement(orientation, plus, next);
                     if(board.spots[next].letter == 0){
                       Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
-                      //std::cout << "(coup mot) c.mot = " << c.mot << std::endl;
                       if(c.score > meilleurCoup.score){
                         meilleurCoup = c;
                       }else if(c.score == meilleurCoup.score){
@@ -331,7 +330,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                     }
                   } else {
                     Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
-                    //std::cout << "mot = " << c.mot << std::endl;
                     if(c.score > meilleurCoup.score){
                       meilleurCoup = c;
                     }else if(c.score == meilleurCoup.score){
@@ -358,7 +356,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                         deplacement(orientation, _plus, next);
                         if(board.spots[next].letter == 0){
                           Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, hand.empty()));
-                          //std::cout << "(coup mot) c.mot = " << c.mot << std::endl;
                           if(c.score > meilleurCoup.score){
                             meilleurCoup = c;
                           } else if(c.score == meilleurCoup.score){
@@ -369,7 +366,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                         }
                       } else {
                         Coups c(case_depart, mot, orientation, play_score(case_depart, mot, orientation, h.empty()));
-                        //std::cout << "mot = " << c.mot << std::endl;
                         if(c.score > meilleurCoup.score){
                           meilleurCoup = c;
                         }else if(c.score == meilleurCoup.score){
@@ -388,7 +384,6 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
             }
           }
         }
-        //plus = _plus;
         mot = _mot;
         case_curr = _case_curr;
       }
@@ -428,7 +423,6 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, true, false)){
       deplacement(true, false, j);
       if(board.spots[j].letter != 0){
-        //std::cout << "verical sans plus" << std::endl;
         return true;
       }
     }
@@ -436,7 +430,6 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, true, true)){
       deplacement(true, true, k);
       if(board.spots[k].letter != 0){
-        //std::cout << "verical avec plus" << std::endl;
         return true;
       }
     }
@@ -444,7 +437,6 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, false, false)){
       deplacement(false, false, x);
       if(board.spots[x].letter != 0){
-        //std::cout << "horizontal sans plus" << std::endl;
         return true;
       }
     }
@@ -452,7 +444,6 @@ bool Game::valid_neighbour(unsigned int case_curr){
     if(moves_available(case_curr, false, true)){
       deplacement(false, true, y);
       if(board.spots[y].letter != 0){
-        //std::cout << "horizontal avec plus" << std::endl;
         return true;
       }
     }
@@ -466,26 +457,22 @@ Coups Game::find_best_move(std::string hand){
   
   std::vector<Coups> tab_coups;
 
-  //
   for(unsigned int i = 0; i < 225; i++){
   //unsigned int i = 121;
     if(valid_neighbour(i)){
       //Vertical
-      //std::cout << "vertical2" << std::endl;
       Coups coup1 = moves_list(hand, i, true);
       if(!coup1.mot.empty()){
         tab_coups.push_back( coup1 );
       }
       
       //Horizontal
-      //std::cout << "horizontal2" << std::endl;
       Coups coup2 = moves_list(hand, i, false);
       if(!coup2.mot.empty()){
         tab_coups.push_back( coup2 );
       }
           
     }
-  //
   }
 
   std::cout << "tab_coups.size() = " << tab_coups.size() << std::endl;
