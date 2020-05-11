@@ -4,7 +4,7 @@
 Game::Game(){
     score = 0;
     std::cout << "Loading dictionary..." << std::endl;
-    lexicon.downloadLexicon();
+    lexicon.download_lexicon();
 }
 
 static bool moves_available(unsigned int case_curr, bool orientation, bool plus){
@@ -66,7 +66,7 @@ void Game::adapt_word(unsigned int& case_depart, bool orientation, std::string& 
     i++;
   };
 
-  word = reverseStr(word);
+  word = reverse_str(word);
 
   i++;
   while( i<mot.size()){

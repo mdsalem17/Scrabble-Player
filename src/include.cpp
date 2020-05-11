@@ -18,7 +18,7 @@ std::pair<std::string, std::string> splitString(std::string word, unsigned int p
     }
 }
 
-std::string reverseStr(std::string word){ 
+std::string reverse_str(std::string word){ 
     unsigned int n = word.length();
     std::string str = word;
     for (unsigned int i = 0; i < n; i++) 
@@ -26,7 +26,7 @@ std::string reverseStr(std::string word){
     return str;
 }
 
-void printArray(std::vector<std::string> input){
+void print_array(std::vector<std::string> input){
 	for (unsigned int i = 0; i < input.size(); i++) {
 		std::cout << input.at(i) <<" "<<std::endl;
 	}
@@ -46,19 +46,14 @@ void remove(char c, std::string& word){
 void remove_duplicate(std::string& s){ 
     for ( std::string::size_type i = 0; i < s.size(); i++ ){
         std::string::size_type j = i + 1;
-        while ( j < s.size() )
-        {
-            if ( s[i] == s[j] )
-            {
+        while ( j < s.size() ) {
+            if ( s[i] == s[j] ){
                 s.erase( j, 1 );
-            }
-            else
-            {
+            } else{
                 ++j;
             }
         }
     }
-         
 }
 
 bool is_board_valid(std::string& board){
