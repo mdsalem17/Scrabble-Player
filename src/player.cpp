@@ -14,12 +14,12 @@ Player::Player(){
     }
     
     for(unsigned int i = 0; i < nbHandLetters; i++){
-        char letter = bag.generateLetter();
+        char letter = bag.generate_letter();
         hand[letter-'A']++;
     }
 }
 
-std::string Player::handToString(){
+std::string Player::hand_to_string(){
     
     std::string word = "";
     char letter;
@@ -35,16 +35,16 @@ std::string Player::handToString(){
     return word;
 }
 
-bool Player::replaceLetters(std::string word){
+bool Player::replace_letters(std::string word){
 
     if(word.size() > 0){
         for(unsigned int i = 0; i < word.size(); i++){
         
-            if(bag.getNbLetters() > 0){
+            if(bag.get_nbLetters() > 0){
                 hand[ word[i] - 'A' ]--;
-                char letter = bag.generateLetter();
+                char letter = bag.generate_letter();
                 hand[ letter - 'A']++;
-            }else if(bag.getNbLetters() < 7 && nbHandLetters > 0){
+            }else if(bag.get_nbLetters() < 7 && nbHandLetters > 0){
                 hand[ word[i] - 'A' ]--;
                 nbHandLetters--;
             }else{
@@ -60,11 +60,11 @@ bool Player::replaceLetters(std::string word){
         return false;
 }
 
-unsigned int Player::getNbHandLetters(){
+unsigned int Player::get_nbHandLetters(){
     return nbHandLetters;
 }
 
-void Player::setNbHandLetters(unsigned int nb_letters){
+void Player::set_nbHandLetters(unsigned int nb_letters){
     nbHandLetters = nb_letters;
 }
 

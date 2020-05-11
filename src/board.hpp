@@ -25,7 +25,7 @@ struct Board {
    * init_i, init_j => statring spot 
    * word => string containting the word to be placed on the board
    * */
-  void placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string &word);
+  void place_word(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string &word);
 
   //spots are public, and can therefore also be accessed by index
   Spot spots[225] ;

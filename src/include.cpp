@@ -117,3 +117,12 @@ void extract_board_hand(const std::string& text, std::string& board, std::string
         }
     }
 }
+
+bool is_integer(const std::string& str){
+
+    for(unsigned int i = 0; i < str.size(); i++){
+        if(!isdigit(str[i]))
+            return false;
+    }
+    return true;
+}

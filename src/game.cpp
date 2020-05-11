@@ -188,7 +188,7 @@ unsigned int Game::word_score(unsigned int case_depart, std::string word, bool o
   unsigned int word_factor = 1;
 
   while(word[i] != '+'){
-    letter_score = player.bag.getCharPoints(word[i]);
+    letter_score = player.bag.get_character_points(word[i]);
     if(board.spots[case_curr].letter == 0){
       letter_score = board.spots[case_curr].bonus.apply_letter(letter_score);
       word_factor = board.spots[case_curr].bonus.apply_word(word_factor);
@@ -203,7 +203,7 @@ unsigned int Game::word_score(unsigned int case_depart, std::string word, bool o
   i++;
 
   while(i < word.size()){
-    letter_score = player.bag.getCharPoints(word[i]);
+    letter_score = player.bag.get_character_points(word[i]);
     if(board.spots[case_curr].letter == 0){
       letter_score = board.spots[case_curr].bonus.apply_letter(letter_score);
       word_factor = board.spots[case_curr].bonus.apply_word(word_factor);
@@ -227,7 +227,7 @@ unsigned int Game::play_score(unsigned int case_depart, std::string word, bool o
     _score += _s;
   }
 
-  if(empty && player.getNbHandLetters()==7 && player.bag.getNbLetters() > 0){
+  if(empty && player.get_nbHandLetters()==7 && player.bag.get_nbLetters() > 0){
     bingo = 50;
   }
 
@@ -268,7 +268,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
       mot += pcurr;
       
       // Il faut bien vérifie qu'on a utilisé au moins une lettre de la main du joueur
-      if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+      if(curr->isWord && hand.size() < player.get_nbHandLetters()) {
         // Il faut bien vérifier que la case suivante est vide pour éviter des collisions
         // entre les mots et de générer des mots non valides  
         if(moves_available(case_curr, orientation, plus)){
@@ -393,7 +393,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
                 bool _plus = true;
                 case_curr = case_depart;
                 
-                if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+                if(curr->isWord && hand.size() < player.get_nbHandLetters()) {
                   if(moves_available(case_curr, orientation, _plus)){
                     unsigned int next = case_curr;
                     deplacement(orientation, _plus, next);
@@ -505,7 +505,7 @@ Coups Game::find_best_move(std::string hand){
     }
   }
 
-  // Pour voir tous les meilleurs coups trouveé (selon la case courante) décommenter
+  // Pour voir tous les meilleurs coups trouvée (selon la case courante) décommenter
   /*
   std::cout << "tab_coups.size() = " << tab_coups.size() << std::endl;
   for(unsigned int i = 0; i < tab_coups.size(); i++){

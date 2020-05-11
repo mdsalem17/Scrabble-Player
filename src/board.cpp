@@ -111,7 +111,7 @@ Spot& Board::operator()(unsigned char l, unsigned char c) {
   return spots[l*15 + c] ;
 }
 
-void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string &word){
+void Board::place_word(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string &word){
   
   std::string word_final = "";
   

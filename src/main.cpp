@@ -47,6 +47,43 @@ int main(int argc, char** argv)
         
         std::cout << "\nin SuzetteText option" << std::endl;
         enable_suzette_txt = true;
+
+        for(unsigned int i = 4; i < (unsigned int) argc; i++){
+          if(!strcmp(argv[i], "-vertical") || !strcmp(argv[i], "-v")){
+            enable_suzette_orientation = true;
+            suzette_orientation = true;
+          }else if(!strcmp(argv[i], "-horizontal") || !strcmp(argv[i], "-h")){
+            enable_suzette_orientation = true;
+            suzette_orientation = false;
+          }else if(!strcmp(argv[i], "-plus") || !strcmp(argv[i], "-p")){
+            enable_suzette_plus = true;
+            suzette_plus = true;
+          }else if(!strcmp(argv[i], "-case") || !strcmp(argv[i], "-c")){
+            if((unsigned)argc > i + 1){
+              std::string str_case_depart = argv[i+1];
+              if(is_integer(str_case_depart)){
+                enable_suzette_case_depart = true;
+                i++;
+                suzette_case_depart = atoi(argv[i]);
+                if(suzette_case_depart >= 225){
+                  std::cerr << "Case needs to be a value betwen [0, 225]" << std::endl;
+                  exit(1);
+                }
+              }else{
+                std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
+                exit(1);
+              }
+            }else{
+              std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
+              exit(1);
+            }
+          }else{
+            std::cerr << "\nERROR: unknown option\nFor help, use option --help" << std::endl;
+            exit(1);
+          }
+          
+        }
+
       }else{
         std::cerr << "\nERROR: need arguments: --suzette-text [board] [hand]\nFor help, use option --help\n" << std::endl;
         exit (1);
@@ -82,12 +119,18 @@ int main(int argc, char** argv)
             enable_suzette_plus = true;
             suzette_plus = true;
           }else if(!strcmp(argv[i], "-case") || !strcmp(argv[i], "-c")){
-            if((unsigned)argc > i + 1 && !(atoi(argv[i]) > 225 )){ ///////////verify argv[i] is int not string, and if string exit(1)
-              enable_suzette_case_depart = true;
-              i++;
-              suzette_case_depart = atoi(argv[i]);
-              if(suzette_case_depart > 225){
-                std::cerr << "Case needs to be a value betwen [0, 225]" << std::endl;
+            if((unsigned)argc > i + 1){
+              std::string str_case_depart = argv[i+1];
+              if(is_integer(str_case_depart)){
+                enable_suzette_case_depart = true;
+                i++;
+                suzette_case_depart = atoi(argv[i]);
+                if(suzette_case_depart >= 225){
+                  std::cerr << "Case needs to be a value betwen [0, 225]" << std::endl;
+                  exit(1);
+                }
+              }else{
+                std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
                 exit(1);
               }
             }else{
@@ -100,14 +143,6 @@ int main(int argc, char** argv)
           }
           
         }
-        std::cout << "suzette_case_depart = " << suzette_case_depart << std::endl;
-
-        std::cout << "\nenable_suzette_file = " << enable_suzette_file << std::endl;
-        std::cout << "enable_suzette_orientation = " << enable_suzette_orientation << ", orientation value = " <<  suzette_orientation << std::endl;
-        std::cout << "enable_suzette_plus = " << enable_suzette_plus << ", plus value = " << suzette_plus << std::endl;
-        std::cout << "enable_suzette_case_depart = " << enable_suzette_case_depart << ", case value = " << suzette_case_depart << std::endl;
-        exit(1);
-
       }else{
         std::cerr << "\nERROR: need arguments: --suzette-file [file_name]\nFor help, use option --help\n" << std::endl;
         exit (1);
@@ -119,7 +154,7 @@ int main(int argc, char** argv)
         sleep_time = atoi(argv[2]);
       }
       std::cout << "in slow mode with time = " << sleep_time << std::endl;
-    }else if ( argc >= 2 && !strcmp(argv[1], "--help")) {
+    }else if ( argc >= 2 && !(strcmp(argv[1], "--help") && strcmp(argv[1], "--h"))) {
       std::cout << "Help menu :\n"
                 << "-----------\n\n"
                 << "Options* :\n"
@@ -128,11 +163,18 @@ int main(int argc, char** argv)
                 << "--suzette-text [board] [hand]\n"
                 << "--suzette-file [file_name]\n"
                 << "* You can use only one option at a time\n\n"
+                << "In Suzette mode :\n"
+                << "-----------------\n"
+                << "-case, -c [number] => search using a certain box\n"
+                << "-plus              => search words with plus\n"
+                << "-vertical, -v      => search words vertically\n"
+                << "-horizontal, -h    => search words horizontally\n\n"
                 << "Formats : \n"
                 << "---------\n"
                 << "[board]     => 225 characters, using dots for empty cells and capitalized letters for the used tiles\n"
                 << "[hand]      => [1,7] characters, using only capitalized letters (with no spaces!)\n"
-                << "[file_name] => path to file containing the [board] [hand] (following the previous formats)\n";
+                << "[file_name] => path to file containing the [board] [hand] (following the previous formats)\n"
+                << "[number]    => number between [0, 225]\n";
       exit (1);
     }else{
       std::cerr << "\nERROR: unknown option\nFor help, use option --help\n" << std::endl;
@@ -162,7 +204,7 @@ int main(int argc, char** argv)
       }
     }
 
-    game.player.setNbHandLetters(txt_hand.size());
+    game.player.set_nbHandLetters(txt_hand.size());
 
     std::cout << game.board << std::endl;
 
@@ -173,16 +215,22 @@ int main(int argc, char** argv)
 
     game.adapt_word(coup.spot, coup.orientation, coup.mot);
 
-    std::cout << "hand = " << txt_hand << std::endl;
-    std::cout << "word = " << coup.mot << std::endl;
-    std::cout << "score = " << coup.score <<std::endl;
+    if(coup.score == 0){
+      std::cout << "No word found" << std::endl;
+    }else{
+      std::cout << "hand = " << txt_hand << std::endl;
+      std::cout << "word = " << coup.mot << std::endl;
+      std::cout << "score = " << coup.score <<std::endl;
 
-    game.board.placeWord(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
-    game.board.load(ss);
+      game.board.place_word(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
+      game.board.load(ss);
 
-    std::cout << "used letters = " << coup.mot << " ( " << coup.mot.size() << " letters ) " << std::endl;
+      std::cout << "used letters = " << coup.mot << " ( " << coup.mot.size() << " letters ) " << std::endl;
 
-    std::cout << game.board << std::endl;
+      std::cout << game.board << std::endl;
+    }
+
+    
   }
   //normal mode
   else{
@@ -194,19 +242,24 @@ int main(int argc, char** argv)
     unsigned int iteration_counter = 0;
     unsigned int used_tiles = 0;
 
-    while( playingGame || game.player.handToString().size() > 0 ){
+    while( playingGame || game.player.hand_to_string().size() > 0 ){
       
       if(iteration_counter <= 9)
         std::cout << "_________________________" << " iteration = 0"<< iteration_counter<<" __________________________\n" << std::endl;
       else
         std::cout << "_________________________" << " iteration = "<< iteration_counter<<" __________________________\n" << std::endl;
 
-      std::cout << "hand = " << game.player.handToString() << std::endl;
+      std::cout << "hand = " << game.player.hand_to_string() << std::endl;
 
       if(iteration_counter == 0)
-        coup = game.find_first_move(game.player.handToString());
+        coup = game.find_first_move(game.player.hand_to_string());
       else
-        coup = game.find_best_move(game.player.handToString());
+        coup = game.find_best_move(game.player.hand_to_string());
+
+      if(coup.score == 0){
+        std::cout << "Pas de mot trouvé, jeu terminé!" << std::endl;
+        break;
+      }
 
       std::string originalWord = coup.mot;
 
@@ -216,7 +269,7 @@ int main(int argc, char** argv)
 
       std::cout << "word = " << coup.mot << " ( " << originalWord << " )" << ", score = " << coup.score <<" "<<std::endl;
 
-      game.board.placeWord(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
+      game.board.place_word(ss, coup.orientation, coup.spot/15, coup.spot%15, coup.mot);
       game.board.load(ss);
 
       std::cout << "used letters = " << coup.mot << " ( " << coup.mot.size() << " letters ) " << std::endl;
@@ -224,7 +277,7 @@ int main(int argc, char** argv)
       used_tiles += coup.mot.size();
       std::cout << "total used tiles = " << used_tiles << std::endl ;
 
-      playingGame = game.player.replaceLetters(coup.mot);
+      playingGame = game.player.replace_letters(coup.mot);
       
       std::cout << "total score = " << game.score << std::endl;
 
@@ -235,7 +288,7 @@ int main(int argc, char** argv)
       file_name += s_iteration_counter;
       file_name += ".txt";
       myfile.open (file_name);
-      game.board.save(myfile, game.player.handToString());
+      game.board.save(myfile, game.player.hand_to_string());
       myfile.close();
 
       //OPTIONS
@@ -249,4 +302,3 @@ int main(int argc, char** argv)
   }
   exit (0);
 }
-
