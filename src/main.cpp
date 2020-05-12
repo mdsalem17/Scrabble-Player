@@ -190,8 +190,8 @@ int main(int argc, char** argv)
     }
   }
 
-  //uncomment in the final version
-  //srand(time(NULL));
+  //comment when debugging
+  srand(time(NULL));
 
   Game game;
 
@@ -245,7 +245,6 @@ int main(int argc, char** argv)
   }
   //normal mode
   else{
-    //need to check if directory is empty
     system("exec rm -r ./data/boards/*");
 
     std::cout << game.board << std::endl;
@@ -303,7 +302,7 @@ int main(int argc, char** argv)
       game.board.save(myfile, game.player.hand_to_string());
       myfile.close();
 
-      //OPTIONS
+      //slow option
       if(use_slow){
         std::chrono::milliseconds timespan(sleep_time*1000);
         std::this_thread::sleep_for(timespan);
