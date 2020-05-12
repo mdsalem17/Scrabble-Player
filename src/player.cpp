@@ -69,5 +69,5 @@ void Player::set_nbHandLetters(unsigned int nb_letters){
 }
 
 Player::~Player(){
-
+    
 }

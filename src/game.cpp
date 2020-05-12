@@ -298,8 +298,8 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
           mot += p;
           bool _plus = true;
           case_curr = case_depart;
- /*         
-          if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+          
+          if(curr->isWord && hand.size() < player.get_nbHandLetters() && mot.size() > 1) {
             if(moves_available(case_curr, orientation, _plus)){
               unsigned int next = case_curr;
               deplacement(orientation, _plus, next);
@@ -312,7 +312,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
               meilleurCoup = compare_moves(c, meilleurCoup);
             }
           }
-*/
+
           if(moves_available(case_curr, orientation, _plus)){
             deplacement(orientation, _plus, case_curr);
             moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, _plus, meilleurCoup);
@@ -344,8 +344,8 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
           mot += p;
           case_curr = case_depart;
           bool _plus = true;
-/*
-          if(curr->isWord && hand.size() < player.getNbHandLetters() && mot.size() > 1) {
+
+          if(curr->isWord && hand.size() < player.get_nbHandLetters() && mot.size() > 1) {
             if(moves_available(case_curr, orientation, _plus)){
               unsigned int next = case_curr;
               deplacement(orientation, _plus, next);
@@ -358,7 +358,7 @@ void Game::moves_list_rec(Node* n, std::string hand, unsigned int case_depart, u
               meilleurCoup = compare_moves(c, meilleurCoup);
             }
           }
- */         
+          
           if(moves_available(case_curr, orientation, _plus)){
             deplacement(orientation, _plus, case_curr);
             moves_list_rec(curr, hand, case_depart, case_curr, mot, orientation, _plus, meilleurCoup);
@@ -523,7 +523,66 @@ Coups Game::find_best_move(std::string hand){
   return meilleurCoup;
 }
 
+Coups Game::find_move_suzette(std::string hand, bool enable_case_depart, bool enable_orientation,
+                                                    unsigned int case_depart, bool orientation){
 
+  if(board.spots[112].letter == 0 && !enable_case_depart){
+    case_depart = 112;
+  }
+
+  Coups meilleurCoup(0, "", true, 0);
+
+  std::vector<Coups> tab_coups;
+
+  //option -case
+  if(enable_case_depart && !enable_orientation){
+    unsigned int i = case_depart;
+    //Vertical
+    Coups coup1 = moves_list(hand, i, true);
+    if(!coup1.mot.empty()){
+      tab_coups.push_back( coup1 );
+    }
+    
+    //Horizontal
+    Coups coup2 = moves_list(hand, i, false);
+    if(!coup2.mot.empty()){
+      tab_coups.push_back( coup2 );
+    }
+  }
+  //option -orientation
+  else if(!enable_case_depart && enable_orientation){
+    if(board.spots[112].letter == 0){
+      Coups coup1 = moves_list(hand, 112, orientation);
+      if(!coup1.mot.empty()){
+        tab_coups.push_back( coup1 );
+      }
+    }else{
+      for(unsigned int i = 0; i < 225; i++){
+        Coups coup1 = moves_list(hand, i, orientation);
+        if(!coup1.mot.empty()){
+          tab_coups.push_back( coup1 );
+        }          
+      }
+    }
+  }
+  //option -case, -orientation
+  else if(enable_case_depart && enable_case_depart){
+    unsigned int i = case_depart;
+    Coups coup1 = moves_list(hand, i, orientation);
+    if(!coup1.mot.empty()){
+      tab_coups.push_back( coup1 );
+    }
+  }
+
+  if(tab_coups.size() > 0){
+    meilleurCoup = tab_coups.at(0);
+    for(unsigned int i = 1; i < tab_coups.size(); i++){
+      meilleurCoup = compare_moves(tab_coups.at(i), meilleurCoup);
+    }
+  }
+
+  return meilleurCoup;
+}
 
 Game::~Game(){
 

@@ -23,9 +23,6 @@ int main(int argc, char** argv)
 
   bool enable_suzette_orientation = false;
   bool suzette_orientation = true;
-
-  bool enable_suzette_plus = false;
-  bool suzette_plus = false;
   
   if(argc >= 2){
     if (!strcmp(argv[1], "--suzette-text")){
@@ -38,26 +35,32 @@ int main(int argc, char** argv)
         
         if( !is_board_valid(txt_board) ){
           std::cerr << "\nThe given board does not match the requested format!\nFor help, use option --help\n" << std::endl;
-          exit(1);
+          return 0;
         }
         if( !is_hand_valid(txt_hand)){
           std::cerr << "\nThe given hand does not match the requested format!\nFor help, use option --help\n" << std::endl;
-          exit(1);
+          return 0;
         }
         
-        std::cout << "\nin SuzetteText option" << std::endl;
         enable_suzette_txt = true;
 
         for(unsigned int i = 4; i < (unsigned int) argc; i++){
           if(!strcmp(argv[i], "-vertical") || !strcmp(argv[i], "-v")){
-            enable_suzette_orientation = true;
-            suzette_orientation = true;
+            if(enable_suzette_orientation){
+              std::cerr << "You need to select only one orientation option (-vertical OR -horizontal)" << std::endl;
+              return 0;
+            }else{
+              enable_suzette_orientation = true;
+              suzette_orientation = true;
+            }
           }else if(!strcmp(argv[i], "-horizontal") || !strcmp(argv[i], "-h")){
-            enable_suzette_orientation = true;
-            suzette_orientation = false;
-          }else if(!strcmp(argv[i], "-plus") || !strcmp(argv[i], "-p")){
-            enable_suzette_plus = true;
-            suzette_plus = true;
+            if(enable_suzette_orientation){
+              std::cerr << "You need to select only one orientation option (-vertical OR -horizontal)" << std::endl;
+              return 0;
+            }else{
+              enable_suzette_orientation = true;
+              suzette_orientation = false;
+            }
           }else if(!strcmp(argv[i], "-case") || !strcmp(argv[i], "-c")){
             if((unsigned)argc > i + 1){
               std::string str_case_depart = argv[i+1];
@@ -67,57 +70,63 @@ int main(int argc, char** argv)
                 suzette_case_depart = atoi(argv[i]);
                 if(suzette_case_depart >= 225){
                   std::cerr << "Case needs to be a value betwen [0, 225]" << std::endl;
-                  exit(1);
+                  return 0;
                 }
               }else{
                 std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
-                exit(1);
+                return 0;
               }
             }else{
               std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
-              exit(1);
+              return 0;
             }
           }else{
             std::cerr << "\nERROR: unknown option\nFor help, use option --help" << std::endl;
-            exit(1);
+            return 0;
           }
           
         }
 
       }else{
         std::cerr << "\nERROR: need arguments: --suzette-text [board] [hand]\nFor help, use option --help\n" << std::endl;
-        exit (1);
+        return 0;
       }
     }else if (!strcmp(argv[1], "--suzette-file")){
       if(argc >= 3){
         std::string str_file;
         std::string filepath(argv[2]);
         bool openedFile = store_file_to_string(filepath, str_file);
-        if(!openedFile) exit(1);
+        if(!openedFile) return 0;
         extract_board_hand(str_file, txt_board, txt_hand);
 
         if( !is_board_valid(txt_board) ){
           std::cerr << "\nThe given board does not match the requested format!\nFor help, use option --help\n" << std::endl;
-          exit(1);
+          return 0;
         }
         if( !is_hand_valid(txt_hand)){
           std::cerr << "\nThe given hand does not match the requested format!\nFor help, use option --help\n" << std::endl;
-          exit(1);
+          return 0;
         }
         
-        std::cout << "\nin SuzetteFile option" << std::endl;
         enable_suzette_file = true;
 
         for(unsigned int i = 3; i < (unsigned int) argc; i++){
           if(!strcmp(argv[i], "-vertical") || !strcmp(argv[i], "-v")){
-            enable_suzette_orientation = true;
-            suzette_orientation = true;
+            if(enable_suzette_orientation){
+              std::cerr << "You need to select only one orientation option (-vertical OR -horizontal)" << std::endl;
+              return 0;
+            }else{
+              enable_suzette_orientation = true;
+              suzette_orientation = true;
+            }
           }else if(!strcmp(argv[i], "-horizontal") || !strcmp(argv[i], "-h")){
-            enable_suzette_orientation = true;
-            suzette_orientation = false;
-          }else if(!strcmp(argv[i], "-plus") || !strcmp(argv[i], "-p")){
-            enable_suzette_plus = true;
-            suzette_plus = true;
+            if(enable_suzette_orientation){
+              std::cerr << "You need to select only one orientation option (-vertical OR -horizontal)" << std::endl;
+              return 0;
+            }else{
+              enable_suzette_orientation = true;
+              suzette_orientation = false;
+            }
           }else if(!strcmp(argv[i], "-case") || !strcmp(argv[i], "-c")){
             if((unsigned)argc > i + 1){
               std::string str_case_depart = argv[i+1];
@@ -127,25 +136,25 @@ int main(int argc, char** argv)
                 suzette_case_depart = atoi(argv[i]);
                 if(suzette_case_depart >= 225){
                   std::cerr << "Case needs to be a value betwen [0, 225]" << std::endl;
-                  exit(1);
+                  return 0;
                 }
               }else{
                 std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
-                exit(1);
+                return 0;
               }
             }else{
               std::cerr << "\nERROR: use of this option -case [case_number]\nFor help, use option --help" << std::endl;
-              exit(1);
+              return 0;
             }
           }else{
             std::cerr << "\nERROR: unknown option\nFor help, use option --help" << std::endl;
-            exit(1);
+            return 0;
           }
           
         }
       }else{
         std::cerr << "\nERROR: need arguments: --suzette-file [file_name]\nFor help, use option --help\n" << std::endl;
-        exit (1);
+        return 0;
       }
     }else if (!strcmp(argv[1], "--slow")) {
       use_slow = true;
@@ -165,20 +174,19 @@ int main(int argc, char** argv)
                 << "* You can use only one option at a time\n\n"
                 << "In Suzette mode :\n"
                 << "-----------------\n"
-                << "-case, -c [number] => search using a certain box\n"
-                << "-plus              => search words with plus\n"
-                << "-vertical, -v      => search words vertically\n"
-                << "-horizontal, -h    => search words horizontally\n\n"
+                << "-case, -c [number] -> search using a certain box\n"
+                << "-vertical, -v      -> search words vertically\n"
+                << "-horizontal, -h    -> search words horizontally\n\n"
                 << "Formats : \n"
                 << "---------\n"
-                << "[board]     => 225 characters, using dots for empty cells and capitalized letters for the used tiles\n"
-                << "[hand]      => [1,7] characters, using only capitalized letters (with no spaces!)\n"
-                << "[file_name] => path to file containing the [board] [hand] (following the previous formats)\n"
-                << "[number]    => number between [0, 225]\n";
-      exit (1);
+                << "[board]     -> 225 characters, using dots for empty cells and capitalized letters for the used tiles\n"
+                << "[hand]      -> [1,7] characters, using only capitalized letters (with no spaces!)\n"
+                << "[file_name] -> path to file containing the [board] [hand] (following the previous formats)\n"
+                << "[number]    -> number between [0, 224]\n";
+      return 0;
     }else{
       std::cerr << "\nERROR: unknown option\nFor help, use option --help\n" << std::endl;
-      exit (1);
+      return 0;
     }
   }
 
@@ -194,13 +202,10 @@ int main(int argc, char** argv)
   //suzette mode
   if(enable_suzette_file || enable_suzette_txt){
 
-    bool empty_board = true;
-
     for(unsigned int i = 0; i < 225; i++){
       char c = txt_board[i];
       if(c >= 'A' && c <= 'Z'){
         game.board.spots[i].letter = c;
-        empty_board = false;
       }
     }
 
@@ -208,15 +213,23 @@ int main(int argc, char** argv)
 
     std::cout << game.board << std::endl;
 
-    if(empty_board)
-      coup = game.find_first_move(txt_hand);
-    else
-      coup = game.find_best_move(txt_hand);
+    //adapt other options : case_depart, orientation, plus
+    if(enable_suzette_case_depart || enable_suzette_orientation){
+      coup = game.find_move_suzette(txt_hand, enable_suzette_case_depart, enable_suzette_orientation,
+                                            suzette_case_depart, suzette_orientation );
+    }
+    //sans options
+    else{
+      if(game.board.spots[112].letter == 0)
+        coup = game.find_first_move(txt_hand);
+      else
+        coup = game.find_best_move(txt_hand);
+    }
 
     game.adapt_word(coup.spot, coup.orientation, coup.mot);
 
     if(coup.score == 0){
-      std::cout << "No word found" << std::endl;
+      std::cout << "No valid word was found" << std::endl;
     }else{
       std::cout << "hand = " << txt_hand << std::endl;
       std::cout << "word = " << coup.mot << std::endl;
@@ -228,12 +241,11 @@ int main(int argc, char** argv)
       std::cout << "used letters = " << coup.mot << " ( " << coup.mot.size() << " letters ) " << std::endl;
 
       std::cout << game.board << std::endl;
-    }
-
-    
+    } 
   }
   //normal mode
   else{
+    //need to check if directory is empty
     system("exec rm -r ./data/boards/*");
 
     std::cout << game.board << std::endl;
@@ -257,7 +269,7 @@ int main(int argc, char** argv)
         coup = game.find_best_move(game.player.hand_to_string());
 
       if(coup.score == 0){
-        std::cout << "Pas de mot trouvé, jeu terminé!" << std::endl;
+        std::cout << "No valid word was found, game finished with score = " << game.score << std::endl;
         break;
       }
 
@@ -300,5 +312,5 @@ int main(int argc, char** argv)
       iteration_counter++;
     }
   }
-  exit (0);
+  return 0;
 }

@@ -3,8 +3,8 @@
 Lien vers le [dépôt sur Gitlab](https://forge.univ-lyon1.fr/p1714033/scrabble-etu.git)
 
 ### Réalisé par 
-* ABDRABO Khaled		- p1713323 
-* MESSOUD Salem			- p1714033
+* ABDRABO Khaled - p1713323 
+* MESSOUD Salem  - p1714033
 ### Encadré par 
 * Christophe Crespelle
 
@@ -53,8 +53,26 @@ Exemple:
 ```bash
 ./bin/main --suzette-file ./data/boards/board3.txt
 ```
- 
+
+### Pour débugger (uniquement en mode Suzette)
+Vous pouvez utiliser les options suivantes :
+```
+-case, -c [number] -> pour préciser la case de départ, avec [number] inclus entre [0, 224]
+
+-vertical, -v      -> pour chercher uniquement, le meilleur coup, en vertical
+
+-horizontal, -h    -> pour chercher uniquement, le meilleur coup, en horizontal
+```
+Exemple:
+```bash
+./bin/main --suzette-file ./data/boards/board3.txt -case 200 -vertical
+```
+
 ### Pour consulter toutes les options proposées
 ```bash
 ./bin/main --help
+```
+ou
+```bash
+./bin/main --h
 ```

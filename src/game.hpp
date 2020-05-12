@@ -44,6 +44,11 @@ class Game{
         // configuration courrente et la main du joueur
         Coups find_best_move(std::string hand);
 
+        // "find_move_suzette" renvoie le meilleur coup à jouer en se basant sur les choix (options)
+        // faits par l'utilisateur, la configuration courrente et la main du joueur 
+        Coups find_move_suzette(std::string hand, bool enable_case_depart, bool enable_orientation,
+                                            unsigned int case_depart, bool orientation);
+
         // "adapt_word" modifie la case de depart et le mot pour permettre de placer
         // le mot sans le plus bien structuré à la bonne place  
         void adapt_word(unsigned int& case_depart, bool orientation, std::string& mot);
