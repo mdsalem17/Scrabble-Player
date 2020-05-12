@@ -7,32 +7,67 @@ const int ALPHA = 26;
 
 Player::Player(){
 
-    nbCurrentTiles = 7;
-    currentTiles = new char[nbCurrentTiles];
+    nbHandLetters = 7;
+
+    for(unsigned int i = 0; i < ALPHA; i++){
+        hand[i] = 0;
+    }
     
-    for(unsigned int i = 0; i < nbCurrentTiles; i++){
-        currentTiles[i] = bag.generateLetter();
+    for(unsigned int i = 0; i < nbHandLetters; i++){
+        char letter = bag.generate_letter();
+        hand[letter-'A']++;
     }
 }
 
-void Player::displayCurrentTiles(){
-    for(unsigned int i = 0; i < nbCurrentTiles; i++){
-        if(i == nbCurrentTiles-1)
-            std::cout << currentTiles[i];
-        else
-            std::cout << currentTiles[i] << ", ";
+std::string Player::hand_to_string(){
+    
+    std::string word = "";
+    char letter;
+
+    for(unsigned int i = 0; i < ALPHA; i++){
+        if(hand[i] > 0){
+            for(unsigned int k = 0; k < hand[i]; k++){
+                letter = 'A' + i;
+                word += letter;
+            }  
+        }
     }
-    std::cout << "\n";
+    return word;
 }
 
-void Player::replaceTile(int pos){
-    currentTiles[pos] = bag.generateLetter();
+bool Player::replace_letters(std::string word){
+
+    if(word.size() > 0){
+        for(unsigned int i = 0; i < word.size(); i++){
+        
+            if(bag.get_nbLetters() > 0){
+                hand[ word[i] - 'A' ]--;
+                char letter = bag.generate_letter();
+                hand[ letter - 'A']++;
+            }else if(bag.get_nbLetters() < 7 && nbHandLetters > 0){
+                hand[ word[i] - 'A' ]--;
+                nbHandLetters--;
+            }else{
+                return false;
+            }
+
+        }
+    }
+
+    if(nbHandLetters > 0)
+        return true;
+    else
+        return false;
 }
 
-unsigned int Player::getCurrentNbTiles(){
-    return nbCurrentTiles;
+unsigned int Player::get_nbHandLetters(){
+    return nbHandLetters;
+}
+
+void Player::set_nbHandLetters(unsigned int nb_letters){
+    nbHandLetters = nb_letters;
 }
 
 Player::~Player(){
-    delete []currentTiles;
+    
 }

@@ -6,23 +6,18 @@ ifndef config
 endif
 export config
 
-PROJECTS := test_board test_gaddag
+PROJECTS := main
 
 .PHONY: all clean help $(PROJECTS)
 
 all: $(PROJECTS)
 
-test_board: 
-	@echo "==== Building test_board ($(config)) ===="
-	@${MAKE} --no-print-directory -C . -f test_board.make
-
-test_gaddag: 
-	@echo "==== Building test_gaddag ($(config)) ===="
-	@${MAKE} --no-print-directory -C . -f test_gaddag.make
+main: 
+	@echo "==== Building main ($(config)) ===="
+	@${MAKE} --no-print-directory -C . -f main.make
 
 clean:
-	@${MAKE} --no-print-directory -C . -f test_board.make clean
-	@${MAKE} --no-print-directory -C . -f test_gaddag.make clean
+	@${MAKE} --no-print-directory -C . -f main.make clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
@@ -34,7 +29,6 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   test_board"
-	@echo "   test_gaddag"
+	@echo "   main"
 	@echo ""
 	@echo "For more information, see http://industriousone.com/premake/quick-start"

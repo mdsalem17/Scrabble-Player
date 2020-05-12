@@ -9,11 +9,10 @@ Bag::Bag() {
     tabLetters = new char[TILES];
     nbLetters = TILES;
     initialize();
-    std::cout << "game starting with " << nbLetters << " tiles" << std::endl;
 }
 
-//fonction qui renvoie les points de la lettre passee par parametre
-unsigned int Bag::getCharPoints(char _letter) const{
+//fonction qui renvoie les points de la lettre passee en parametre
+unsigned int Bag::get_character_points(char _letter) const{
     unsigned int points = 0;
     switch (_letter){
         case 'A': points = 1; break;
@@ -61,7 +60,7 @@ void Bag::initialize(){
     }
 }
 
-void Bag::displayBag(){
+void Bag::display_bag(){
     std::cout << " [ ";
     for(unsigned int i = 0; i < TILES; i++){
         std::cout << tabLetters[i] << ", "; 
@@ -69,7 +68,8 @@ void Bag::displayBag(){
     std::cout << "] \n";
 }
 
-char Bag::generateLetter(){
+char Bag::generate_letter(){
+
     int random = rand() % nbLetters;
     char result = tabLetters[random];
     tabLetters[random] = tabLetters[nbLetters-1];
@@ -77,7 +77,7 @@ char Bag::generateLetter(){
     return result;
 }
 
-unsigned int Bag::getNbLetters() const{
+unsigned int Bag::get_nbLetters() const{
     return nbLetters;
 }
 

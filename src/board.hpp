@@ -12,7 +12,7 @@ struct Board {
   Board() ;
 
   //i/o to files
-  void save(std::ostream& out) ;
+  void save(std::ostream& out, std::string hand) ;
   void load(std::istream& in) ;
 
   //access to the spots by coordinates
@@ -25,7 +25,7 @@ struct Board {
    * init_i, init_j => statring spot 
    * word => string containting the word to be placed on the board
    * */
-  void placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string word);
+  void place_word(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string &word);
 
   //spots are public, and can therefore also be accessed by index
   Spot spots[225] ;

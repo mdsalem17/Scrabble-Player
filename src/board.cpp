@@ -73,12 +73,9 @@ Board::Board() {
 }
 
 //i/o to files
-void Board::save(std::ostream& out) {
+void Board::save(std::ostream& out, std::string hand) {
   //write the grid of chars
   for(unsigned char i = 0; i < 225; ++i) {
-    if( i%15 == 0) {
-      out << std::endl ;
-    }
     if(spots[i].letter) {
       //a letter is present, write it
       out << spots[i].letter ;
@@ -87,6 +84,7 @@ void Board::save(std::ostream& out) {
       out << "." ;
     }
   }
+  out<<" "<< hand;
 }
 
 void Board::load(std::istream& in) {
@@ -113,16 +111,27 @@ Spot& Board::operator()(unsigned char l, unsigned char c) {
   return spots[l*15 + c] ;
 }
 
-void Board::placeWord(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string word){
+void Board::place_word(std::stringstream & ss, bool orientation, unsigned int init_i, unsigned int init_j, std::string &word){
+  
+  std::string word_final = "";
+  
   if(orientation){ //vertical
     for(unsigned int i = 0; i < word.length(); i++){
-      spots[15*(init_i+i)+init_j].letter = word[i];
+      if(spots[15*(init_i+i)+init_j].letter == 0){
+        spots[15*(init_i+i)+init_j].letter = word[i];
+        word_final += word[i];
+      }
     }
   }else{ //horizontal
     for(unsigned int i = 0; i < word.length(); i++){
-      spots[(15*init_i)+init_j+i].letter = word[i];
+      if(spots[(15*init_i)+init_j+i].letter == 0){
+        spots[(15*init_i)+init_j+i].letter = word[i];
+        word_final += word[i];
+      }
     }
   }
+
+  word = word_final;
 
   //stringstream
   std::string line = "";
