@@ -1,78 +1,68 @@
-# Projet Scrabble
+# Scrabble Solver Projet
+The aim of this project was to program an automatic Scrabble player capable of determining the move with the most points using the [GADDAG](https://en.wikipedia.org/wiki/GADDAG) data structure.
 
-Lien vers le [dépôt sur Gitlab](https://forge.univ-lyon1.fr/p1714033/scrabble-etu.git)
+## Usage
+Clone or download and unzip the archive. Compiling this repository is done using the `premake4` command. You must therefore verify that it is installed. For that, you can use ```apt policy premake4``` or ``` dpkg -l premake4```. Otherwise, Premake packages are available for most linux distributions.
 
-### Réalisé par 
-* ABDRABO Khaled - p1713323 
-* MESSOUD Salem  - p1714033
-### Encadré par 
-* Christophe Crespelle
-
-### Proposé par 
-* Vincent Nivoliers
-
-## Prise en main
-
-Clonez ou Téléchargez et décompressez l’archive scrabble-etu.zip. La compilation de ce dépôt
-se fait à l'aide de la commande `premake4`. Vous devez donc bien vérifier qu'elle est bien
-installée. Pour cela, vous pouvez utiliser ```apt policy premake4``` ou bien ```dpkg -l premake4```
-qui doit contenir « ii ». Sinon, des paquets Premake sont disponibles pour la plupart des
-distributions linux.
-
-Compilez le programme, puis lancez-le:
+To compile the program type:
 ```bash
 premake4 gmake
 make
+```
+To launch it type:
+```
 ./bin/main
 ```
-Vous verrez défiler tous les mouvements issus de la partie du scrabble, un mouvement correspond
-à placer un meilleur coup possible parmi les mots ayant le score le plus élevé. 
 
-Pour vous faciliter la prise en main, nous avons proposé plusieurs options qui vont permettre
-de garantir une fluidité et une flexibilité.
+## Options
+To make it easier for you to get started, we made several options that can help you debug and better visualize the results.
  
-### Pour ralentir le défilement de la partie
+### To slow down the scrolling of the game
 ```bash
-./bin/main --slow [secondes: optionnel]
+./bin/main --slow [seconds: optional]
 ```
- 
-### Pour utiliser un plateau sous format text
+### Debugging mode
+This mode helps you debug the game using a saved instance of the board and a particular hand to visualize the results
+#### To get the best move using a board in text format
 ```bash
 ./bin/main --suzette-text [board] [hand]
 ```
-Exemple :
+Example :
 ```bash
 ./bin/main --suzette-text ................................................................................................................B.........P....A.........E....T.........R....E.........L....A.........ESBROUFA.......R........................... EELMSTT
 ```
  
-### Pour utiliser un plateau enregistrée dans un fichier (.txt)
+#### To get the best move using a board saved in a (.txt) file
 ```bash
 ./bin/main --suzette-file [filename]
 ```
-Exemple:
+Example:
 ```bash
 ./bin/main --suzette-file ./data/boards/board3.txt
 ```
+P.S. when launching the solver in the normal mode, all the boards are saved in the folder ./data/boards
 
-### Pour débugger (uniquement en mode Suzette)
-Vous pouvez utiliser les options suivantes :
-```
--case, -c [number] -> pour préciser la case de départ, avec [number] inclus entre [0, 224]
+#### Other debugging options
+You can use the following options: 
 
--vertical, -v      -> pour chercher uniquement, le meilleur coup, en vertical
-
--horizontal, -h    -> pour chercher uniquement, le meilleur coup, en horizontal
-```
-Exemple:
+  - -case, -c [number] -> to choose a particular starting CASE using a [number] included between [0, 224]
+  - -vertical, -v      -> to search, the best move, vertically
+  - -horizontal, -h    -> to search, the best move, horizontally
+  
+Example:
 ```bash
 ./bin/main --suzette-file ./data/boards/board3.txt -case 200 -vertical
 ```
 
-### Pour consulter toutes les options proposées
+### Need some help?
+You can use the help option to visualize all the available options (with their explanation)
 ```bash
 ./bin/main --help
 ```
-ou
+or
 ```bash
 ./bin/main --h
 ```
+
+### Project details
+This project was developped by Khaled Abdrabo and Salem Messoud during the 3rd year of our Computer Science bachelor's degree in Claude Bernard University - Lyon 1.
